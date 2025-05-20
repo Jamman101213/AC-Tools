@@ -2,70 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Page Not Found - AC Tools</title>
+  <title>404 - Page Not Found</title>
   <style>
-    body, html {
-      margin: 0; padding: 0; height: 100%;
-      background: linear-gradient(135deg, #5a2a82, #8e44ad, #9b59b6);
+    body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #e0c7ff;
+      background: #5a2a82;
+      color: white;
       display: flex;
-      justify-content: center;
+      height: 100vh;
       align-items: center;
-      text-align: center;
-      overflow: hidden;
-      user-select: none;
+      justify-content: center;
+      flex-direction: column;
+      margin: 0;
     }
-
-    .container {
-      max-width: 400px;
-    }
-
     h1 {
-      font-size: 6rem;
-      margin-bottom: 0;
-      /* subtle soft shadow instead of strong glow */
-      text-shadow: 1px 1px 4px rgba(130, 72, 158, 0.7);
+      font-size: 5rem;
+      margin-bottom: 0.5rem;
     }
-
     p {
       font-size: 1.5rem;
-      margin-top: 0.5rem;
-      margin-bottom: 2rem;
-      color: #d7b8ff;
-      text-shadow: 1px 1px 3px rgba(130, 72, 158, 0.5);
     }
-
-    button {
-      background: #7a3ea0;
-      border: none;
-      padding: 1rem 2rem;
-      font-size: 1.2rem;
-      border-radius: 10px;
-      cursor: pointer;
-      color: #e0c7ff;
-      /* subtle shadow */
-      box-shadow: 0 0 8px rgba(122, 62, 160, 0.7);
-      transition: background 0.3s ease;
-    }
-
-    button:hover {
-      background: #5a2a82;
+    a {
+      color: #f0b0ff;
+      text-decoration: none;
+      margin-top: 20px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>404</h1>
-    <p>Oops! Page Not Found.</p>
-    <button onclick="goHome()">Go Home</button>
-  </div>
-
-  <script>
-    function goHome() {
-      window.location.href = "https://ac-tools.vercel.app/";
-    }
-  </script>
+  <h1>404</h1>
+  <p>Oops! Page not found.</p>
+  <a href="/">Go back home</a>
 </body>
 </html>
