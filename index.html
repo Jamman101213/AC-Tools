@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Open Graph tags for Discord and social media previews -->
+    <head>
+  <meta property="og:title" content="Animal Company Item Maker by JammanDaCompany" />
+  <meta property="og:description" content="Create Animal Company items easily with this JSON editor tool." />
+  <meta property="og:image" content="https://ac-tools.glitch.me/logo.png" />
+  <meta property="og:url" content="https://ac-tools.glitch.me/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="google-adsense-account" content="ca-pub-6213603518465024">
+<link rel="icon" href="https://cdn.glitch.global/6a361d8e-3b4c-476b-8c50-6e59f8afd3b5/Logo?v=1747519783410" type="image/png">
+<!-- Place this inside the <head> tag -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6213603518465024"
+     crossorigin="anonymous"></script>
+</head>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Animal Company JSON Tool</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Segoe+UI&display=swap");
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+        color: white;
+        background: linear-gradient(to right, #6a1b9a, #8e24aa);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        position: relative;
+        transition: background 0.5s ease, color 0.5s ease;
+      }
+
+      body.dark-mode {
+        background: linear-gradient(to right, #0b0c17, #2a2142);
+        color: #cfccee;
+      }
+
+      .stars,
+      .stars2,
+      .stars3 {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+        z-index: 0;
+        background-repeat: repeat;
+        animation: starMove 100s linear infinite;
+      }
+      .stars {
+        background-image: radial-gradient(2px 2px at 20px 30px, white, transparent 70%);
+        background-size: 100px 100px;
+        animation-duration: 150s;
+        opacity: 0.5;
+      }
+      .stars2 {
+        background-image: radial-gradient(1.5px 1.5px at 50px 50px, #ccc, transparent 70%);
+        background-size: 150px 150px;
+        animation-duration: 100s;
+        opacity: 0.3;
+      }
+      .stars3 {
+        background-image: radial-gradient(1px 1px at 70px 80px, #eee, transparent 70%);
+        background-size: 200px 200px;
+        animation-duration: 80s;
+        opacity: 0.2;
+      }
+
+      @keyframes starMove {
+        from {
+          background-position: 0 0;
+        }
+        to {
+          background-position: 10000px 10000px;
+        }
+      }
+
+      @keyframes slideInUp {
+        from {
+          transform: translateY(50px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      header,
+      ul,
+      .make-json-button,
+      footer,
+      #darkToggle {
+        animation: slideInUp 1s ease forwards;
+        opacity: 0;
+      }
+
+      header {
+        padding: 30px 20px 10px;
+        animation-delay: 0.2s;
+        position: relative;
+        z-index: 1;
+      }
+
+      h1 {
+        font-size: 3rem;
+        margin: 0;
+        display: inline-block;
+        cursor: default;
+        user-select: none;
+        transition: transform 0.3s ease;
+        position: relative;
+        z-index: 1;
+      }
+      h1:hover {
+        transform: translateY(-10px) rotate(-5deg);
+      }
+      h1::after {
+        content: " 🚀";
+        display: inline-block;
+        margin-left: 8px;
+        animation: rocketBounce 2s ease-in-out infinite;
+        position: relative;
+        top: 0;
+        transition: top 0.3s ease;
+      }
+      h1:hover::after {
+        top: -5px;
+      }
+      @keyframes rocketBounce {
+        0%, 100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+
+      p {
+        font-size: 1.2rem;
+        margin: 10px 0 30px;
+        position: relative;
+        z-index: 1;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+        animation-delay: 0.4s;
+        position: relative;
+        z-index: 1;
+        max-width: 360px;
+      }
+
+      ul li {
+        margin: 8px 0;
+        text-align: left;
+      }
+
+      ul li::before {
+        content: "✔️ ";
+        margin-right: 8px;
+        color: #d1a3ff;
+      }
+
+      .make-json-button {
+        background: linear-gradient(135deg, #8e24aa, #ba68c8);
+        color: white;
+        text-decoration: none;
+        padding: 15px 36px;
+        font-size: 1.3rem;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(186, 104, 200, 0.6);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        animation-delay: 0.6s;
+        position: relative;
+        z-index: 1;
+        display: inline-block;
+        user-select: none;
+        cursor: pointer;
+        margin: 5px;
+      }
+
+      .make-json-button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 8px 25px rgba(203, 103, 228, 0.9);
+      }
+
+      footer {
+        margin-top: auto;
+        padding: 20px;
+        font-size: 0.9rem;
+        color: #eee;
+        opacity: 0.7;
+        animation-delay: 0.8s;
+        position: relative;
+        z-index: 1;
+      }
+
+      #darkToggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(255 255 255 / 0.15);
+        border: none;
+        color: white;
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        z-index: 100;
+        user-select: none;
+      }
+      #darkToggle:hover {
+        background: rgba(255 255 255 / 0.3);
+      }
+
+      #visitorCountContainer {
+        font-size: 1.1rem;
+        margin: 15px 0 35px;
+        position: relative;
+        z-index: 1;
+        color: #d1a3ff;
+        font-weight: bold;
+      }
+
+      @media (max-width: 420px) {
+        h1 {
+          font-size: 2.2rem;
+        }
+        p,
+        ul {
+          font-size: 1rem;
+          max-width: 90vw;
+        }
+        .make-json-button {
+          padding: 12px 24px;
+          font-size: 1.1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stars"></div>
+    <div class="stars2"></div>
+    <div class="stars3"></div>
+
+    <button id="darkToggle" aria-label="Toggle dark mode">🌙 Dark Mode</button>
+
+    <header>
+      <h1>Animal Company Tool</h1>
+      <p>Create items and generate your own JSON files easily!</p>
+    </header>
+
+    <ul>
+      <li>Choose from all of the items even the new ones</li>
+      <li>Customize properties like name, icon, and color</li>
+      <li>Has all of the new items from the space update</li>
+      <li>Works for changing your loadout with metadata</li>
+      <li>Instantly generate clean JSON</li>
+      <li>Styled in a modern purple theme</li>
+    </ul>
+
+    <div id="visitorCountContainer">
+      Visits: <span id="visitorCount">Loading...</span>
+    </div>
+
+    <!-- ✨ Updated Buttons -->
+    <a href="#" id="makeJsonBtn" class="make-json-button">✨ Make JSON</a>
+    <a href="https://ac-tools.glitch.me/Status" class="make-json-button">📊 Status</a>
+
+    <footer>
+      &copy; 2025 Animal Company Tools by <strong>Richard Updated by jammandacompany</strong>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <script>
+      const darkToggle = document.getElementById("darkToggle");
+      darkToggle.addEventListener("click", () => {
+        document.body.classList.toggle("dark-mode");
+        darkToggle.textContent = document.body.classList.contains("dark-mode")
+          ? "☀️ Light Mode"
+          : "🌙 Dark Mode";
+      });
+
+      const makeJsonBtn = document.getElementById("makeJsonBtn");
+      makeJsonBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        window.location.href = "https://ac-tools.glitch.me/create-loadout";
+      });
+
+      window.onload = () => {
+        ["header", "ul", ".make-json-button", "footer", "#darkToggle"].forEach(
+          (selector) => {
+            document.querySelectorAll(selector).forEach((el) => {
+              el.style.opacity = 1;
+            });
+          }
+        );
+      };
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyAiNsBnqgY2i1aLzyJEC0YcwDoGJTGYLiM",
+        authDomain: "websites-be0b4.firebaseapp.com",
+        projectId: "websites-be0b4",
+        storageBucket: "websites-be0b4.appspot.com",
+        messagingSenderId: "1027369012808",
+        appId: "1:1027369012808:web:465ade376fc3b72062d27d",
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+
+      const visitorCountEl = document.getElementById("visitorCount");
+      const counterDoc = db.collection("counters").doc("visitors");
+
+      async function updateCounter() {
+        if (localStorage.getItem("hasVisited")) {
+          const doc = await counterDoc.get();
+          visitorCountEl.textContent = doc.exists ? doc.data().count : "0";
+        } else {
+          try {
+            await db.runTransaction(async (transaction) => {
+              const doc = await transaction.get(counterDoc);
+              const newCount = doc.exists ? doc.data().count + 1 : 1;
+              doc.exists
+                ? transaction.update(counterDoc, { count: newCount })
+                : transaction.set(counterDoc, { count: 1 });
+              visitorCountEl.textContent = newCount;
+            });
+            localStorage.setItem("hasVisited", "true");
+          } catch (error) {
+            visitorCountEl.textContent = "Error updating count";
+            console.error("Transaction failed: ", error);
+          }
+        }
+      }
+
+      updateCounter();
+
+      counterDoc.onSnapshot((doc) => {
+        if (doc.exists) {
+          visitorCountEl.textContent = doc.data().count;
+        }
+      });
+    </script>
+  </body>
+</html>
