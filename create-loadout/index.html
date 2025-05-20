@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+  <head>
+<meta name="google-adsense-account" content="ca-pub-6213603518465024">
+<!-- Place this inside the <head> tag -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6213603518465024"
+     crossorigin="anonymous"></script>
+<head>
+<link rel="icon" href="https://cdn.glitch.global/6a361d8e-3b4c-476b-8c50-6e59f8afd3b5/Logo?v=1747519783410" type="image/png">
+
+    <title>Animal Company Item Maker</title>
+    <style>
+    body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 20px;
+    background: linear-gradient(135deg, #f7f0f7, #d7b2e0);
+    color: #3e0857;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .dark-mode {
+    background: linear-gradient(135deg, #230032, #45004a);
+    color: #e9d7ff;
+  }
+
+  .dark-mode input,
+  .dark-mode select,
+  .dark-mode textarea {
+    background-color: #3b004d;
+    color: #e9d7ff;
+    border: 1px solid #ae7cff;
+  }
+
+  h1, h3 {
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    color: #6c2a86;
+    text-shadow: 1px 1px 3px rgba(160, 84, 184, 0.6);
+  }
+
+  .dark-mode h1,
+  .dark-mode h3 {
+    color: #d0b8ff;
+    text-shadow: 1px 1px 4px #7b45e0;
+  }
+
+  .slot-container {
+    border: 2px solid #b484d6;
+    padding: 18px;
+    margin-bottom: 22px;
+    background-color: #fff6ff;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(164, 92, 197, 0.25);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .dark-mode .slot-container {
+    background-color: #3b004d;
+    border-color: #a47cfb;
+    box-shadow: 0 0 15px #b188ff88;
+  }
+
+  label {
+    display: block;
+    margin: 10px 0 6px;
+    color: inherit;
+    font-weight: 600;
+  }
+
+  input,
+  select {
+    padding: 8px 10px;
+    width: 100%;
+    max-width: 320px;
+    margin-bottom: 8px;
+    border: 1.5px solid #b07fd6;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+  }
+
+  input:focus,
+  select:focus {
+    border-color: #7a32bf;
+    outline: none;
+  }
+
+  textarea {
+    width: 100%;
+    height: 280px;
+    padding: 12px;
+    font-family: monospace;
+    font-size: 14px;
+    border: 1.5px solid #b07fd6;
+    border-radius: 6px;
+    background-color: #ffeaff;
+    color: #420063;
+    resize: vertical;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .dark-mode textarea {
+    background-color: #3b004d;
+    color: #d7baff;
+  }
+
+  button {
+    padding: 10px 18px;
+    margin-right: 12px;
+    margin-top: 14px;
+    cursor: pointer;
+    background-color: #9148c7;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 700;
+    box-shadow: 0 4px 8px rgba(145, 72, 199, 0.4);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #702ea8;
+    box-shadow: 0 6px 12px rgba(112, 46, 168, 0.6);
+  }
+
+  .remove-btn {
+    background-color: #e33a77;
+    box-shadow: 0 3px 7px rgba(227, 58, 119, 0.5);
+  }
+
+  .remove-btn:hover {
+    background-color: #b62759;
+    box-shadow: 0 5px 11px rgba(182, 39, 89, 0.7);
+  }
+
+  .color-preview {
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    border: 1.5px solid #8a5da8;
+    margin-left: 12px;
+    vertical-align: middle;
+    border-radius: 6px;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+    transition: border-color 0.3s ease;
+  }
+
+  #modeToggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #7b3fb7;
+    box-shadow: 0 3px 8px rgba(123, 63, 183, 0.6);
+  }
+
+  #modeToggle:hover {
+    background-color: #5b2a9e;
+    box-shadow: 0 5px 12px rgba(91, 42, 158, 0.8);
+  }
+
+  .child-block {
+    border-left: 3px solid #a074d8;
+    padding-left: 18px;
+    margin-top: 14px;
+    transition: border-color 0.3s ease;
+  }
+
+  .dark-mode .child-block {
+    border-color: #c1a9ff;
+  }
+    </style>
+  </head>
+  <body>
+    <button id="modeToggle" onclick="toggleMode()">Toggle Light/Dark</button>
+    <h1>Animal Company Json Maker</h1>
+    <label for="searchItemID">Search Item ID:</label>
+    <input type="text" id="searchItemID" placeholder="Type to filter item IDs..." style="padding: 8px; margin-bottom: 20px; width: 320px; max-width: 100%;">
+
+
+    <!-- Import JSON Button and File Input -->
+    <input type="file" id="jsonFileInput" accept=".json" style="display:none" onchange="handleFileSelect(event)" />
+    <button onclick="document.getElementById('jsonFileInput').click()">Import JSON</button>
+
+    <div id="slotEditors"></div>
+
+    <button onclick="generateJSON()">Generate JSON</button>
+    <button onclick="downloadJSON()">Download JSON</button>
+
+    <h3>Generated JSON:</h3>
+    <textarea id="jsonOutput" readonly></textarea>
+
+    <script>
+      const slots = ["back", "leftHand", "rightHand", "leftHip", "rightHip"];
+      const itemIDs = [
+        "None",
+        "item_anti_gravity_grenade",
+        "item_apple",
+        "item_arrow",
+        "item_arrow_heart",
+        "item_arrow_lightbulb",
+        "item_backpack",
+        "item_backpack_black",
+        "item_backpack_green",
+        "item_backpack_large_base",
+        "item_backpack_large_basketball",
+        "item_backpack_large_clover",
+        "item_backpack_pink",
+        "item_backpack_small_base",
+        "item_backpack_white",
+        "item_backpack_with_flashlight",
+        "item_balloon",
+        "item_balloon_heart",
+        "item_banana",
+        "item_baseball_bat",
+        "item_big_cup",
+        "item_boombox",
+        "item_boombox_neon",
+        "item_box_fan",
+        "item_calculator",
+        "item_cardboard_box",
+        "item_cash",
+        "item_cash_mega_pile",
+        "item_cash_pile",
+        "item_clapper",
+        "item_cluster_grenade",
+        "item_cola",
+        "item_cola_large",
+        "item_company_ration",
+        "item_company_ration_heal",
+        "item_cracker",
+        "item_crate",
+        "item_crossbow",
+        "item_crossbow_heart",
+        "item_crowbar",
+        "item_disc",
+        "item_disposable_camera",
+        "item_dynamite",
+        "item_dynamite_cube",
+        "item_egg",
+        "item_flaregun",
+        "item_flashbang",
+        "item_flashlight",
+        "item_flashlight_mega",
+        "item_flashlight_red",
+        "item_floppy3",
+        "item_floppy5",
+        "item_football",
+        "item_frying_pan",
+        "item_glowstick",
+        "item_goldbar",
+        "item_grenade",
+        "item_heart_chunk",
+        "item_heart_gun",
+        "item_heartchocolatebox",
+        "item_hh_key",
+        "item_hookshot",
+        "item_hoverpad",
+        "item_impulse_grenade",
+        "item_jetpack",
+        "item_keycard",
+        "item_lance",
+        "item_large_banana",
+        "item_mug",
+        "item_nut",
+        "item_ogre_hands",
+        "item_ore_copper_l",
+        "item_ore_copper_m",
+        "item_ore_copper_s",
+        "item_ore_gold_l",
+        "item_ore_gold_m",
+        "item_ore_gold_s",
+        "item_ore_hell",
+        "item_ore_silver_l",
+        "item_ore_silver_m",
+        "item_ore_silver_s",
+        "item_painting_canvas",
+        "item_paperpack",
+        "item_pelican_case",
+        "item_pickaxe",
+        "item_pickaxe_cny",
+        "item_pickaxe_cube",
+        "item_pipe",
+        "item_pinata_bat",
+        "item_plunger",
+        "item_pogostick",
+        "item_police_baton",
+        "item_pumpkin_pie",
+        "item_pumpkinjack",
+        "item_pumpkinjack_small",
+        "item_quiver",
+        "item_quiver_heart",
+        "item_radioactive_broccoli",
+        "item_randombox_mobloot_big",
+        "item_randombox_mobloot_medium",
+        "item_randombox_mobloot_small",
+        "item_randombox_mobloot_weapons",
+        "item_revolver",
+        "item_revolver_ammo",
+        "item_revolver_gold",
+        "item_rope",
+        "item_rpg",
+        "item_rpg_ammo",
+        "item_rpg_ammo_egg",
+        "item_rpg_cny",
+        "item_rpg_easter",
+        "item_rubberducky",
+        "item_ruby",
+        "item_saddle",
+        "item_scanner",
+        "item_scissors",
+        "item_shield",
+        "item_shield_bones",
+        "item_shield_police",
+        "item_shotgun",
+        "item_shotgun_ammo",
+        "item_shredder",
+        "item_shrinking_broccoli",
+        "item_snowball",
+        "item_stapler",
+        "item_stick_armbones",
+        "item_stick_bone",
+        "item_sticker_dispenser",
+        "item_sticky_dynamite",
+        "item_stinky_cheese",
+        "item_tablet",
+        "item_tapedispenser",
+        "item_tele_grenade",
+        "item_theremin",
+        "item_timebomb",
+        "item_toilet_paper",
+        "item_toilet_paper_mega",
+        "item_toilet_paper_roll_empty",
+        "item_treestick",
+        "item_tripwire_explosive",
+        "item_trophy",
+        "item_turkey_leg",
+        "item_turkey_whole",
+        "item_umbrella",
+        "item_umbrella_clover",
+        "item_unidentified",
+        "item_upsidedown_loot",
+        "item_uranium_chunk_l",
+        "item_uranium_chunk_m",
+        "item_uranium_chunk_s",
+        "item_whoopie",
+        "item_zipline_gun"
+      ];
+
+      function toggleMode() {
+        document.body.classList.toggle("dark-mode");
+      }
+
+      function createItemEditor() {
+        const wrapper = document.createElement("div");
+        wrapper.className = "slot-container";
+        wrapper.innerHTML = `
+          <label>Item ID:</label>
+          <select class="item-id">
+            ${itemIDs.map((id) => `<option value="${id}">${id}</option>`).join("")}
+          </select>
+          <div class="color-preview"></div>
+          <label>Hue: <input type="number" class="hue" value="0"></label>
+          <label>Saturation: <input type="number" class="saturation" value="0"></label>
+          <label>State: <input type="number" class="state" value="0"></label>
+          <label>Ammo: <input type="number" class="ammo" value="0"></label>
+          <label>Scale Modifier: <input type="number" class="scale" value="0"></label>
+          <div class="children-container"></div>
+          <button onclick="addChildItem(this)">Add Child</button>
+        `;
+        attachColorPreviewListeners(wrapper);
+        return wrapper;
+       }
+
+      function addChildItem(button) {
+        const container = button.parentElement.querySelector(".children-container");
+        const child = document.createElement("div");
+        child.className = "child-block";
+        child.innerHTML = `
+          <label>Item ID:</label>
+          <select class="item-id">
+            ${itemIDs.map((id) => `<option value="${id}">${id}</option>`).join("")}
+          </select>
+          <div class="color-preview"></div>
+          <label>Hue: <input type="number" class="hue" value="0"></label>
+          <label>Saturation: <input type="number" class="saturation" value="0"></label>
+          <label>State: <input type="number" class="state" value="0"></label>
+          <label>Ammo: <input type="number" class="ammo" value="0"></label>
+          <label>Scale Modifier: <input type="number" class="scale" value="0"></label>
+          <div class="children-container"></div>
+          <button onclick="addChildItem(this)">Add Child</button>
+          <button class="remove-btn" onclick="this.parentElement.remove()">Remove</button>
+        `;
+        attachColorPreviewListeners(child);
+        container.appendChild(child);
+      }
+
+      function attachColorPreviewListeners(container) {
+        const hueInput = container.querySelector(".hue");
+        const satInput = container.querySelector(".saturation");
+        [hueInput, satInput].forEach((input) =>
+          input.addEventListener("input", updateColorPreviews)
+        );
+      }
+
+      function updateColorPreviews() {
+        document.querySelectorAll(".slot-container, .child-block").forEach((container) => {
+          const hue = parseFloat(container.querySelector(".hue")?.value || 0);
+          const sat = parseFloat(container.querySelector(".saturation")?.value || 0);
+          const preview = container.querySelector(".color-preview");
+          if (preview) {
+            preview.style.backgroundColor = `hsl(${hue}, ${sat}%, 50%)`;
+          }
+        });
+      }
+
+      function getItemData(container) {
+  const itemID = container.querySelector(".item-id").value;
+  if (itemID === "None") return null;
+
+  const item = { itemID };
+  const hue = parseFloat(container.querySelector(".hue").value);
+  const sat = parseFloat(container.querySelector(".saturation").value);
+  const state = parseFloat(container.querySelector(".state").value);
+  const ammo = parseFloat(container.querySelector(".ammo").value);
+  const scale = parseFloat(container.querySelector(".scale").value);
+  if (hue) item.colorHue = hue;
+  if (sat) item.colorSaturation = sat;
+  if (state) item.state = state;
+  if (ammo) item.ammo = ammo;
+  if (scale) item.scaleModifier = scale;
+
+  // Get children from the children container
+  const childrenContainer = container.querySelector(".children-container");
+  const childrenBlocks = childrenContainer
+    ? Array.from(childrenContainer.querySelectorAll(".child-block"))
+    : [];
+  const children = childrenBlocks.map(getItemData).filter(Boolean);
+
+  if (children.length) item.children = children;
+  return item;
+}
+
+
+      function generateJSON() {
+        const result = {};
+        for (const slot of slots) {
+          const editor = document.getElementById(`editor-${slot}`);
+          const data = getItemData(editor);
+          if (data) result[slot] = data;
+        }
+        document.getElementById("jsonOutput").value = JSON.stringify(result, null, 2);
+      }
+
+      function downloadJSON() {
+        const json = document.getElementById("jsonOutput").value;
+        if (!json) return alert("Generate JSON first.");
+        const blob = new Blob([json], { type: "application/json" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "bypass_bag.json";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+
+      // New function: Set item data into an editor container, recursively for children
+      function setItemData(container, data) {
+        if (!data) return;
+        const select = container.querySelector(".item-id");
+        if (itemIDs.includes(data.itemID)) {
+          select.value = data.itemID;
+        } else {
+          select.value = "None";
+        }
+        container.querySelector(".hue").value = data.colorHue || 0;
+        container.querySelector(".saturation").value = data.colorSaturation || 0;
+        container.querySelector(".state").value = data.state || 0;
+        container.querySelector(".ammo").value = data.ammo || 0;
+        container.querySelector(".scale").value = data.scaleModifier || 0;
+
+        updateColorPreviews();
+
+        const childrenContainer = container.querySelector(".children-container");
+        childrenContainer.innerHTML = ""; // Clear current children
+
+        if (data.children && data.children.length) {
+          for (const childData of data.children) {
+            const childBlock = document.createElement("div");
+            childBlock.className = "child-block";
+            childBlock.innerHTML = `
+              <label>Item ID:</label>
+              <select class="item-id">
+                ${itemIDs.map((id) => `<option value="${id}">${id}</option>`).join("")}
+              </select>
+              <div class="color-preview"></div>
+              <label>Hue: <input type="number" class="hue" value="0"></label>
+              <label>Saturation: <input type="number" class="saturation" value="0"></label>
+              <label>State: <input type="number" class="state" value="0"></label>
+              <label>Ammo: <input type="number" class="ammo" value="0"></label>
+              <label>Scale Modifier: <input type="number" class="scale" value="0"></label>
+              <div class="children-container"></div>
+              <button onclick="addChildItem(this)">Add Child</button>
+              <button class="remove-btn" onclick="this.parentElement.remove()">Remove</button>
+            `;
+            attachColorPreviewListeners(childBlock);
+            childrenContainer.appendChild(childBlock);
+
+            // Recursively fill child data
+            setItemData(childBlock, childData);
+          }
+        }
+      }
+
+      // Handle JSON file selection and import
+      function handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          try {
+            const json = JSON.parse(e.target.result);
+            importJSON(json);
+          } catch (err) {
+            alert("Invalid JSON file.");
+          }
+        };
+        reader.readAsText(file);
+        // Clear the input so you can import again if you want
+        event.target.value = "";
+      }
+
+      function importJSON(json) {
+        for (const slot of slots) {
+          const editor = document.getElementById(`editor-${slot}`);
+          if (json[slot]) {
+            setItemData(editor, json[slot]);
+          } else {
+            // If no data for slot, reset editor to default (itemID None)
+            setItemData(editor, { itemID: "None" });
+          }
+        }
+        generateJSON(); // Update output area with imported data
+      }
+
+     // Create slot editors on page load
+window.onload = () => {
+  const slotEditors = document.getElementById("slotEditors");
+  for (const slot of slots) {
+    const editor = createItemEditor();
+    editor.id = `editor-${slot}`;
+    const heading = document.createElement("h3");
+    heading.textContent = `Slot: ${slot}`;
+    slotEditors.appendChild(heading);
+    slotEditors.appendChild(editor);
+  }
+};
+
+// Filters item IDs in all select elements based on search input
+function filterItemIDs() {
+  const searchTerm = document.getElementById('searchItemID').value.toLowerCase();
+
+  document.querySelectorAll('.slot-container select.item-id, .child-block select.item-id').forEach(select => {
+    // Remember current selected value
+    const currentValue = select.value;
+
+    // Clear all options
+    select.innerHTML = '';
+
+    // Add filtered options only
+    itemIDs.forEach(id => {
+      if (id.toLowerCase().includes(searchTerm) || id === "None") {
+        const option = document.createElement('option');
+        option.value = id;
+        option.textContent = id;
+        select.appendChild(option);
+      }
+    });
+
+    // Restore the previously selected value if still in filtered options, else default to "None"
+    if ([...select.options].some(opt => opt.value === currentValue)) {
+      select.value = currentValue;
+    } else {
+      select.value = "None";
+    }
+  });
+}
+
+// Add event listener for search input
+document.getElementById('searchItemID').addEventListener('input', filterItemIDs);
+
+    </script>
+  </body>
+</html>
