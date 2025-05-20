@@ -2,37 +2,67 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>404 - Page Not Found</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Page Not Found - AC Tools</title>
   <style>
-    body {
+    body, html {
+      margin: 0; padding: 0; height: 100%;
+      background: linear-gradient(135deg, #5a2a82, #9b59b6);
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #5a2a82;
-      color: white;
+      color: #f4dcff;
       display: flex;
-      height: 100vh;
-      align-items: center;
       justify-content: center;
-      flex-direction: column;
-      margin: 0;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+      user-select: none;
     }
+
+    .container {
+      max-width: 400px;
+    }
+
     h1 {
-      font-size: 5rem;
-      margin-bottom: 0.5rem;
+      font-size: 6rem;
+      margin-bottom: 0;
+      text-shadow: 0 0 10px #d58cff;
     }
+
     p {
       font-size: 1.5rem;
+      margin-top: 0.5rem;
+      margin-bottom: 2rem;
+      text-shadow: 0 0 8px #d58cff;
     }
-    a {
-      color: #f0b0ff;
-      text-decoration: none;
-      margin-top: 20px;
-      font-weight: bold;
+
+    button {
+      background: #9b59b6;
+      border: none;
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      border-radius: 10px;
+      cursor: pointer;
+      color: #f4dcff;
+      box-shadow: 0 0 10px #d58cff;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #5a2a82;
     }
   </style>
 </head>
 <body>
-  <h1>404</h1>
-  <p>Oops! Page not found.</p>
-  <a href="/">Go back home</a>
+  <div class="container">
+    <h1>404</h1>
+    <p>Oops! Page Not Found.</p>
+    <button onclick="goHome()">Go Home</button>
+  </div>
+
+  <script>
+    function goHome() {
+      window.location.href = "https://ac-tools.vercel.app/";
+    }
+  </script>
 </body>
 </html>
