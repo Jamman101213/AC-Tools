@@ -6,33 +6,57 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <meta name="google-signin-client_id" content="1027369012808-eode61mt3k853bfvuiv6u9ltv29l722r.apps.googleusercontent.com">
-<link rel="icon" href="https://cdn.glitch.global/d52a6415-826b-4b02-82db-e300df7a8506/Logo?v=1747925805307" type="image/png" />
+  <link rel="icon" href="https://cdn.glitch.global/d52a6415-826b-4b02-82db-e300df7a8506/Logo?v=1747925805307" type="image/png" />
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans&display=swap');
+
     body {
-      font-family: Arial, sans-serif;
-      background: #5a2a82;
-      color: white;
+      font-family: 'Open Sans', sans-serif;
+      background: linear-gradient(135deg, #f2d3b3, #f9e6d2);
+      color: #5a3e2b;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+      user-select: none;
       text-align: center;
-      padding-top: 100px;
     }
 
-    #error {
-      color: #ff9999;
-      margin-top: 20px;
+    h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 4.5rem;
+      margin-bottom: 40px;
+      text-shadow: 2px 2px 8px rgba(90, 62, 43, 0.4);
     }
 
     button {
-      background: white;
-      color: #5a2a82;
+      background: #d9986a;
+      color: white;
       border: none;
-      padding: 10px 20px;
-      font-size: 1rem;
-      border-radius: 5px;
+      padding: 15px 40px;
+      font-size: 1.25rem;
+      font-weight: 700;
+      border-radius: 30px;
       cursor: pointer;
+      box-shadow: 0 5px 15px rgba(217, 152, 106, 0.6);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     button:hover {
-      background: #f0f0f0;
+      background: #b3744a;
+      box-shadow: 0 8px 20px rgba(179, 116, 74, 0.8);
+    }
+
+    #error {
+      margin-top: 30px;
+      color: #b85050;
+      font-weight: 600;
+      font-size: 1.1rem;
+      text-shadow: 1px 1px 5px rgba(90, 62, 43, 0.3);
+      min-height: 24px;
     }
   </style>
 </head>
