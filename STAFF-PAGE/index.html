@@ -55,7 +55,7 @@
         const liveCount = document.getElementById("liveCount");
 
         // Listen to live changes of visits in Firestore
-        const visitsDoc = doc(db, "counters", "visits");
+        const visitsDoc = doc(db, "counters", "visitors");
         onSnapshot(visitsDoc, (docSnap) => {
           if (docSnap.exists()) {
             const visits = docSnap.data().visits ?? 0;
