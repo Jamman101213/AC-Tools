@@ -43,6 +43,7 @@ body.dark-mode {
   color: #cfccee;
 }
 
+/* Star Layers */
 .stars,
 .stars2,
 .stars3 {
@@ -58,12 +59,7 @@ body.dark-mode {
   transition: opacity 0.8s ease;
 }
 
-body:not(.dark-mode) .stars,
-body:not(.dark-mode) .stars2,
-body:not(.dark-mode) .stars3 {
-  opacity: 0; /* Hide stars in light mode */
-}
-
+/* Default: Visible */
 .stars {
   background-image: radial-gradient(2px 2px at 20px 30px, white, transparent 70%);
   background-size: 100px 100px;
@@ -81,6 +77,13 @@ body:not(.dark-mode) .stars3 {
   background-size: 200px 200px;
   animation-duration: 80s;
   opacity: 0.2;
+}
+
+/* Light Mode: Hide Stars */
+body:not(.dark-mode) .stars,
+body:not(.dark-mode) .stars2,
+body:not(.dark-mode) .stars3 {
+  opacity: 0;
 }
 
 @keyframes starMove {
@@ -258,6 +261,7 @@ footer {
     font-size: 1.1rem;
   }
 }
+
 
     </style>
   </head>
