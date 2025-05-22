@@ -1,71 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Staff Login</title>
-  <script type="module">
-    // Firebase imports
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <meta name="google-signin-client_id" content="1027369012808-eode61mt3k853bfvuiv6u9ltv29l722r.apps.googleusercontent.com">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #5a2a82;
+      color: white;
+      text-align: center;
+      padding-top: 100px;
+    }
 
+    #error {
+      color: #ff9999;
+      margin-top: 20px;
+    }
+
+    button {
+      background: white;
+      color: #5a2a82;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Staff Login</h1>
+  <button onclick="signInWithGoogle()">Sign in with Google</button>
+  <div id="error"></div>
+
+  <script>
     // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyAiNsBnqgY2i1aLzyJEC0YcwDoGJTGYLiM",
       authDomain: "websites-be0b4.firebaseapp.com",
       projectId: "websites-be0b4",
-      storageBucket: "websites-be0b4.appspot.com",
+      storageBucket: "websites-be0b4.firebasestorage.app",
       messagingSenderId: "1027369012808",
       appId: "1:1027369012808:web:465ade376fc3b72062d27d",
       measurementId: "G-SD6F88DYDS"
     };
 
     // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
+    firebase.initializeApp(firebaseConfig);
 
-    // Login function
-    window.login = () => {
-      signInWithPopup(auth, provider)
+    function signInWithGoogle() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider)
         .then((result) => {
           const email = result.user.email;
           if (email === "jamesonmanning101213@gmail.com") {
-            window.location.href = "/STAFF-PAGE/";
+            window.location.href = "https://ac-tools.vercel.app/STAFF-PAGE/";
           } else {
-            alert("Access denied. Only staff can enter.");
+            document.getElementById("error").textContent = "Access denied: You are not staff.";
+            firebase.auth().signOut();
           }
         })
         .catch((error) => {
-          alert("Login failed: " + error.message);
+          document.getElementById("error").textContent = "Login failed: " + error.message;
         });
-    };
+    }
   </script>
-  <style>
-    body {
-      background: #5a2a82;
-      color: white;
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 1.2rem;
-      background: #f0b0ff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      color: #5a2a82;
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
-  <h1>Staff Login</h1>
-  <button onclick="login()">Login with Google</button>
 </body>
 </html>
