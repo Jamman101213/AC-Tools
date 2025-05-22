@@ -4,10 +4,58 @@
   <meta charset="UTF-8" />
   <title>Staff Page - AC Tools</title>
   <link rel="icon" href="https://cdn.glitch.global/6a361d8e-3b4c-476b-8c50-6e59f8afd3b5/Logo?v=1747519783410" type="image/png" />
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #5a2a82;
+      color: white;
+      margin: 0;
+      padding: 20px;
+    }
+    #content {
+      display: none; /* Hide content until logged in */
+      max-width: 600px;
+      margin: auto;
+      text-align: center;
+    }
+    input[type="number"] {
+      width: 100px;
+      padding: 8px;
+      font-size: 1rem;
+      margin-right: 10px;
+      border-radius: 4px;
+      border: none;
+      outline: none;
+    }
+    button {
+      padding: 10px 16px;
+      font-size: 1rem;
+      background-color: #9b59b6;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #7e3fa2;
+    }
+    #welcome {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+    #visitorCount {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      color: #f0b0ff;
+    }
+  </style>
+
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.6.2/firebase-auth.js";
+    import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.6.2/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAiNsBnqgY2i1aLzyJEC0YcwDoGJTGYLiM",
@@ -19,152 +67,66 @@
       measurementId: "G-SD6F88DYDS"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    function load404() {
-      fetch('/404.html')
-        .then(response => {
-          if (!response.ok) throw new Error('404 page not found');
-          return response.text();
-        })
-        .then(html => {
-          document.documentElement.innerHTML = html;
-        })
-        .catch(() => {
-          document.body.innerHTML = '<h1>404 Page Not Found</h1>';
-        });
-    }
+    const allowedEmail = "jamesonmanning101213@gmail.com";
 
-    // Hide content initially
-    document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("content").style.display = "none";
-    });
+    window.onload = () => {
+      const content = document.getElementById("content");
+      const welcome = document.getElementById("welcome");
+      const visitorCount = document.getElementById("visitorCount");
+      const visitsInput = document.getElementById("visitsInput");
+      const saveBtn = document.getElementById("saveBtn");
 
-    onAuthStateChanged(auth, async user => {
-      if (!user || user.email !== "jamesonmanning101213@gmail.com") {
-        load404();
-      } else {
-        const content = document.getElementById("content");
-        content.style.display = "flex";
-        document.getElementById("welcome").textContent = `Welcome, ADMIN!`;
+      onAuthStateChanged(auth, (user) => {
+        if (user && user.email === allowedEmail) {
+          // Show content
+          content.style.display = "block";
+          welcome.textContent = `Welcome ADMIN (${user.email})`;
 
-        // Load current visits count from Firestore
-        try {
-          const visitsDoc = doc(db, "counters", "visits");
-          const visitsSnap = await getDoc(visitsDoc);
-          if (visitsSnap.exists()) {
-            document.getElementById("visitsInput").value = visitsSnap.data().visits ?? 0;
-          } else {
-            document.getElementById("visitsInput").value = 0;
-          }
-        } catch (error) {
-          document.getElementById("message").textContent = "Error loading visits: " + error.message;
-          document.getElementById("message").style.color = "red";
+          const visitorsDoc = doc(db, "counters", "visitors");
+
+          // Real-time listener to visitor count
+          onSnapshot(visitorsDoc, (docSnap) => {
+            if (docSnap.exists()) {
+              const visits = docSnap.data().visitors ?? 0;
+              visitorCount.textContent = `Live Visitor Count: ${visits}`;
+              visitsInput.value = visits;
+            } else {
+              visitorCount.textContent = "Live Visitor Count: 0";
+              visitsInput.value = 0;
+            }
+          });
+
+          saveBtn.onclick = async () => {
+            const newVisits = parseInt(visitsInput.value);
+            if (isNaN(newVisits) || newVisits < 0) {
+              alert("Please enter a valid non-negative number");
+              return;
+            }
+            await setDoc(visitorsDoc, { visitors: newVisits });
+            alert("Visitor count updated!");
+          };
+
+        } else {
+          // Not authorized or not logged in
+          window.location.href = "/404.html"; // Redirect to 404 page
         }
-      }
-    });
-
-    // Save visits count on button click
-    window.saveVisits = async () => {
-      const visitsVal = parseInt(document.getElementById("visitsInput").value);
-      const messageEl = document.getElementById("message");
-      if (isNaN(visitsVal) || visitsVal < 0) {
-        messageEl.textContent = "Please enter a valid non-negative number.";
-        messageEl.style.color = "red";
-        return;
-      }
-      try {
-        await setDoc(doc(db, "counters", "visits"), { visits: visitsVal });
-        messageEl.textContent = "Visits updated successfully!";
-        messageEl.style.color = "lightgreen";
-      } catch (error) {
-        messageEl.textContent = "Failed to update visits: " + error.message;
-        messageEl.style.color = "red";
-      }
-    };
-
-    // Logout button logic
-    document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById('logoutBtn').addEventListener('click', () => {
-        signOut(auth).then(() => {
-          window.location.href = "/STAFF-PAGE/verify";
-        });
       });
-    });
+    };
   </script>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #5a2a82, #9b59b6);
-      color: #fff;
-      height: 100vh;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      text-align: center;
-      padding: 20px;
-    }
-    #content {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      max-width: 400px;
-      background: rgba(0,0,0,0.4);
-      border-radius: 12px;
-      padding: 30px;
-      box-shadow: 0 0 15px rgba(155,89,182,0.5);
-    }
-    h1 {
-      margin-bottom: 1rem;
-    }
-    input[type=number] {
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-      font-size: 1.1rem;
-      margin-bottom: 15px;
-      box-sizing: border-box;
-    }
-    button {
-      padding: 10px 20px;
-      background: #8e44ad;
-      border: none;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 5px;
-      transition: background 0.3s ease;
-      font-size: 1rem;
-      margin-top: 10px;
-    }
-    button:hover {
-      background: #732d91;
-    }
-    #message {
-      margin-top: 15px;
-      font-weight: bold;
-      min-height: 1.5em;
-    }
-  </style>
 </head>
 <body>
   <div id="content">
-    <h1 id="welcome"></h1>
-    <p>This is the staff-only area.</p>
+    <div id="welcome">Welcome ADMIN</div>
+    <div id="visitorCount">Live Visitor Count: 0</div>
 
-    <label for="visitsInput">Edit Visits Count:</label>
-    <input type="number" id="visitsInput" min="0" />
-    <button onclick="saveVisits()">Save</button>
-    <div id="message"></div>
-
-    <button id="logoutBtn">Logout</button>
+    <div>
+      <input type="number" id="visitsInput" min="0" />
+      <button id="saveBtn">Save</button>
+    </div>
   </div>
 </body>
 </html>
