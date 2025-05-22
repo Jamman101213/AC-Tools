@@ -58,7 +58,7 @@
         const visitsDoc = doc(db, "counters", "visitors");
         onSnapshot(visitsDoc, (docSnap) => {
           if (docSnap.exists()) {
-            const visits = docSnap.data().visits ?? 0;
+            const visits = docSnap.data().visitors ?? 0;
             liveCount.textContent = visits;
             visitsInput.value = visits;
           } else {
