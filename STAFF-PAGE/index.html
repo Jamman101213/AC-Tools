@@ -38,7 +38,6 @@
         });
     }
 
-    // Hide content initially
     document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("content").style.display = "none";
     });
@@ -54,11 +53,10 @@
         const visitsInput = document.getElementById("visitsInput");
         const liveCount = document.getElementById("liveCount");
 
-        // Listen to live changes of visits in Firestore
         const visitsDoc = doc(db, "counters", "visitors");
         onSnapshot(visitsDoc, (docSnap) => {
           if (docSnap.exists()) {
-            const visits = docSnap.data().visitors ?? 0;
+            const visits = docSnap.data().count ?? 0;
             liveCount.textContent = visits;
             visitsInput.value = visits;
           } else {
@@ -71,7 +69,6 @@
       }
     });
 
-    // Save visits count on button click
     window.saveVisits = async () => {
       const visitsVal = parseInt(document.getElementById("visitsInput").value);
       const messageEl = document.getElementById("message");
@@ -90,7 +87,6 @@
       }
     };
 
-    // Logout button logic
     document.addEventListener("DOMContentLoaded", () => {
       document.getElementById('logoutBtn').addEventListener('click', () => {
         signOut(auth).then(() => {
