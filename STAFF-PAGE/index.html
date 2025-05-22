@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Staff Only - AC Tools</title>
+  <link rel="icon" href="https://cdn.glitch.global/6a361d8e-3b4c-476b-8c50-6e59f8afd3b5/Logo?v=1747519783410" type="image/png">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #2c003e;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+    .hidden {
+      display: none;
+    }
+    input[type="password"] {
+      padding: 10px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      background-color: #5a2a82;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #732a98;
+    }
+  </style>
+</head>
+<body>
+  <div id="login">
+    <h2>Staff Only</h2>
+    <p>Please enter the staff password to continue.</p>
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="checkPassword()">Enter</button>
+    <p id="error" style="color:red;"></p>
+  </div>
+
+  <div id="staff-content" class="hidden">
+    <h1>Welcome, Staff!</h1>
+    <p>You now have access to staff tools.</p>
+    <!-- You can add admin buttons or features here -->
+  </div>
+
+  <script>
+    function checkPassword() {
+      const password = document.getElementById("password").value;
+      const correctPassword = "jamman123"; // Change this to your actual password
+
+      if (password === correctPassword) {
+        document.getElementById("login").classList.add("hidden");
+        document.getElementById("staff-content").classList.remove("hidden");
+      } else {
+        document.getElementById("error").textContent = "Wrong password!";
+      }
+    }
+  </script>
+</body>
+</html>
