@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login - AC Tools</title>
+  <script type="module">
+    // Import Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyAiNsBnqgY2i1aLzyJEC0YcwDoGJTGYLiM",
+      authDomain: "websites-be0b4.firebaseapp.com",
+      projectId: "websites-be0b4",
+      storageBucket: "websites-be0b4.firebasestorage.app",
+      messagingSenderId: "1027369012808",
+      appId: "1:1027369012808:web:465ade376fc3b72062d27d",
+      measurementId: "G-SD6F88DYDS"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Handle login
+    window.login = async function () {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        if (user.email === "jamesonmanning101213@gmail.com") {
+          window.location.href = "/staff.html";
+        } else {
+          alert("Access denied: You are not authorized.");
+        }
+      } catch (error) {
+        alert("Login failed: " + error.message);
+      }
+    };
+  </script>
+</head>
+<body style="font-family: Arial; text-align: center; margin-top: 100px;">
+  <h1>Staff Login</h1>
+  <input type="email" id="email" placeholder="Email"><br><br>
+  <input type="password" id="password" placeholder="Password"><br><br>
+  <button onclick="login()">Log In</button>
+</body>
+</html>
