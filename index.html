@@ -278,7 +278,7 @@ footer {
     </div>
 
     <!-- ✨ Updated Buttons -->
-    <a href="#" id="makeJsonBtn" class="make-json-button" style="opacity: 1;">✨ Make JSON</a>
+    <a href="https://ac-tools.vercel.app/create-loadout" id="makeJsonBtn" class="make-json-button" style="opacity: 1;">✨ Make JSON</a>
     <a href="https://ac-tools.vercel.app/Status" class="make-json-button" style="opacity: 1;">📊 Status</a>
 
     <footer style="opacity: 1;">
@@ -298,13 +298,7 @@ footer {
           : "🌙 Dark Mode";
       });
 
-      const makeJsonBtn = document.getElementById("makeJsonBtn");
-      makeJsonBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        window.location.href = "https://ac-tools.vercel.app/create-loadout";
-      });
-
-      window.onload = () => {
+            window.onload = () => {
         ["header", "ul", ".make-json-button", "footer", "#darkToggle"].forEach(
           (selector) => {
             document.querySelectorAll(selector).forEach((el) => {
