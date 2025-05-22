@@ -81,7 +81,7 @@
         return;
       }
       try {
-        await setDoc(doc(db, "counters", "visitors"), { visitors: visitorsVal });
+        await setDoc(doc(db, "counters", "visitors"), { visitors: visitsVal });
         messageEl.textContent = "Visits updated successfully!";
         messageEl.style.color = "lightgreen";
       } catch (error) {
