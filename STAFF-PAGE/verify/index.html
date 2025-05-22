@@ -1,50 +1,71 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Login - AC Tools</title>
+  <meta charset="UTF-8" />
+  <title>Staff Login</title>
   <script type="module">
-    // Import Firebase
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+    // Firebase imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
     // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyAiNsBnqgY2i1aLzyJEC0YcwDoGJTGYLiM",
       authDomain: "websites-be0b4.firebaseapp.com",
       projectId: "websites-be0b4",
-      storageBucket: "websites-be0b4.firebasestorage.app",
+      storageBucket: "websites-be0b4.appspot.com",
       messagingSenderId: "1027369012808",
       appId: "1:1027369012808:web:465ade376fc3b72062d27d",
       measurementId: "G-SD6F88DYDS"
     };
 
+    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
 
-    // Handle login
-    window.login = async function () {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
-      try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-
-        if (user.email === "jamesonmanning101213@gmail.com") {
-          window.location.href = "/staff.html";
-        } else {
-          alert("Access denied: You are not authorized.");
-        }
-      } catch (error) {
-        alert("Login failed: " + error.message);
-      }
+    // Login function
+    window.login = () => {
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          const email = result.user.email;
+          if (email === "jamesonmanning101213@gmail.com") {
+            window.location.href = "/STAFF-PAGE/";
+          } else {
+            alert("Access denied. Only staff can enter.");
+          }
+        })
+        .catch((error) => {
+          alert("Login failed: " + error.message);
+        });
     };
   </script>
+  <style>
+    body {
+      background: #5a2a82;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1.2rem;
+      background: #f0b0ff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: #5a2a82;
+      font-weight: bold;
+    }
+  </style>
 </head>
-<body style="font-family: Arial; text-align: center; margin-top: 100px;">
+<body>
   <h1>Staff Login</h1>
-  <input type="email" id="email" placeholder="Email"><br><br>
-  <input type="password" id="password" placeholder="Password"><br><br>
-  <button onclick="login()">Log In</button>
+  <button onclick="login()">Login with Google</button>
 </body>
 </html>
