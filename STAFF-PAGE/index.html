@@ -35,10 +35,18 @@
         });
     }
 
+    // Hide content initially
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("content").style.display = "none";
+    });
+
     onAuthStateChanged(auth, user => {
       if (!user || user.email !== "jamesonmanning101213@gmail.com") {
         load404();
       } else {
+        // Show content and welcome message
+        const content = document.getElementById("content");
+        content.style.display = "flex";
         document.getElementById("welcome").textContent = `Welcome, ${user.email}!`;
       }
     });
@@ -55,6 +63,11 @@
       align-items: center;
       flex-direction: column;
       text-align: center;
+    }
+    #content {
+      display: none;
+      flex-direction: column;
+      align-items: center;
     }
     h1 {
       margin-bottom: 1rem;
@@ -76,9 +89,11 @@
   </style>
 </head>
 <body>
-  <h1 id="welcome">Loading...</h1>
-  <p>This is the staff-only area.</p>
-  <button id="logoutBtn">Logout</button>
+  <div id="content">
+    <h1 id="welcome"></h1>
+    <p>This is the staff-only area.</p>
+    <button id="logoutBtn">Logout</button>
+  </div>
 
   <script type="module">
     import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
