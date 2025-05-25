@@ -476,58 +476,76 @@
     updateAddMainItemBtn();
   });
 
+    // Function to generate JSON output based on current UI data
   function generateJSON() {
-    const mainBoxes = mainItemsContainer.querySelectorAll('.main-item-box');
-    const result = [];
+    const allMainItems = [];
 
-    mainBoxes.forEach(box => {
+    // Loop through all main item boxes
+    mainItemsContainer.querySelectorAll('.main-item-box').forEach(box => {
+      // Get main item values
       const mainSelect = box.querySelector('select');
-      const colorHue = box.querySelector('input[type="number"][aria-label="colorHue"]') || box.querySelector('input:nth-of-type(1)');
-      const colorSaturation = box.querySelector('input[type="number"]:nth-of-type(2)') || box.querySelector('input:nth-of-type(2)');
-      const scaleModifier = box.querySelector('input[type="number"]:nth-of-type(3)') || box.querySelector('input:nth-of-type(3)');
-      const ammo = box.querySelector('input[type="number"]:nth-of-type(4)') || box.querySelector('input:nth-of-type(4)');
+      const hue = parseInt(box.querySelector('input[type="number"]:nth-of-type(1)').value) || 0;
+      const saturation = parseInt(box.querySelector('input[type="number"]:nth-of-type(2)').value) || 0;
+      const scale = parseInt(box.querySelector('input[type="number"]:nth-of-type(3)').value) || 0;
+      const ammo = parseInt(box.querySelector('input[type="number"]:nth-of-type(4)').value) || 0;
 
-      const mainItemID = mainSelect.value;
-
-      if (!mainItemID) return;
-
-      const colorHueVal = parseInt(box.querySelector('input[type="number"]').value) || 0;
-      const colorSatVal = parseInt(box.querySelectorAll('input[type="number"]')[1].value) || 0;
-      const scaleVal = parseFloat(box.querySelectorAll('input[type="number"]')[2].value) || 0;
-      const ammoVal = parseInt(box.querySelectorAll('input[type="number"]')[3].value) || 0;
-
-      const childrenDivs = box.querySelectorAll('.child-item');
+      // Collect children
       const children = [];
+      box.querySelectorAll('.child-item').forEach(childDiv => {
+        const childSelect = childDiv.querySelector('select');
+        const childHue = parseInt(childDiv.querySelector('input[type="number"]:nth-of-type(1)').value) || 0;
+        const childSaturation = parseInt(childDiv.querySelector('input[type="number"]:nth-of-type(2)').value) || 0;
+        const childScale = parseInt(childDiv.querySelector('input[type="number"]:nth-of-type(3)').value) || 0;
+        const childAmmo = parseInt(childDiv.querySelector('input[type="number"]:nth-of-type(4)').value) || 0;
 
-      childrenDivs.forEach(child => {
-        const childSelect = child.querySelector('select');
-        const childHue = parseInt(child.querySelectorAll('input[type="number"]')[0].value) || 0;
-        const childSat = parseInt(child.querySelectorAll('input[type="number"]')[1].value) || 0;
-        const childScale = parseFloat(child.querySelectorAll('input[type="number"]')[2].value) || 0;
-        const childAmmo = parseInt(child.querySelectorAll('input[type="number"]')[3].value) || 0;
-
-        const childID = childSelect.value;
-
-        if(childID && childID !== "None") {
-          children.push({
-            itemID: childID,
+        children.push({
+          key: childSelect.value,
+          value: JSON.stringify({
             colorHue: childHue,
-            colorSaturation: childSat,
+            colorSaturation: childSaturation,
             scaleModifier: childScale,
-            ammo: childAmmo,
-          });
-        }
+            ammo: childAmmo
+          }),
+          permission: 'private',
+          collection: 'items'
+        });
       });
 
-      result.push({
-        itemID: mainItemID,
-        colorHue: colorHueVal,
-        colorSaturation: colorSatVal,
-        scaleModifier: scaleVal,
-        ammo: ammoVal,
-        children: children
+      // Push main item object with children as nested items inside value string
+      allMainItems.push({
+        collection: 'items',
+        key: mainSelect.value,
+        permission: 'private',
+        value: JSON.stringify({
+          colorHue: hue,
+          colorSaturation: saturation,
+          scaleModifier: scale,
+          ammo: ammo,
+          items: children
+        })
       });
     });
+
+    // Show the JSON in the <pre> tag nicely formatted
+    document.getElementById('jsonOutput').textContent = JSON.stringify(allMainItems, null, 2);
+  }
+
+  // Update add button enable/disable (limit max 5 main items)
+  function updateAddMainItemBtn() {
+    addMainItemBtn.disabled = mainItemsContainer.children.length >= 5;
+  }
+
+  addMainItemBtn.addEventListener('click', () => {
+    if (mainItemsContainer.children.length < 5) {
+      const newItem = createMainItemBox();
+      mainItemsContainer.appendChild(newItem.box);
+      updateAddMainItemBtn();
+    }
+  });
+
+  // Initialize add button state
+  updateAddMainItemBtn();
+
 
     document.getElementById('jsonOutput').textContent = JSON.stringify(result, null, 2);
   }
