@@ -168,438 +168,367 @@
         border-color: #e9d7c1;
       }
     </style>
-  </head>
-  <body>
-    <h2>Inventory Builder</h2>
 
-    <div id="mainItemsContainer"></div>
-    <button id="addMainItemBtn">+ Add Main Item (max 5)</button>
+<h2>Inventory Builder</h2>
 
-    <button style="width: 100%; margin-top: 15px;" onclick="generateJSON()">Generate JSON</button>
+<div id="mainItemsContainer"></div>
+<button id="addMainItemBtn">+ Add Main Item (max 5)</button>
 
-    <h3>Generated JSON:</h3>
-    <pre id="jsonOutput"></pre>
+<button style="width: 100%; margin-top: 15px;" onclick="generateJSON()">Generate JSON</button>
 
-    <script>
-      const itemIDs = [
-        "None",
-        "item_anti_gravity_grenade",
-        "item_apple",
-        "item_arrow",
-        "item_arrow_heart",
-        "item_arrow_lightbulb",
-        "item_backpack",
-        "item_backpack_black",
-        "item_backpack_green",
-        "item_backpack_large_base",
-        "item_backpack_large_basketball",
-        "item_backpack_large_clover",
-        "item_backpack_pink",
-        "item_backpack_small_base",
-        "item_backpack_white",
-        "item_backpack_with_flashlight",
-        "item_balloon",
-        "item_balloon_heart",
-        "item_banana",
-        "item_baseball_bat",
-        "item_big_cup",
-        "item_boombox",
-        "item_boombox_neon",
-        "item_box_fan",
-        "item_calculator",
-        "item_cardboard_box",
-        "item_cash",
-        "item_cash_mega_pile",
-        "item_cash_pile",
-        "item_clapper",
-        "item_cluster_grenade",
-        "item_cola",
-        "item_cola_large",
-        "item_company_ration",
-        "item_company_ration_heal",
-        "item_cracker",
-        "item_crate",
-        "item_crossbow",
-        "item_crossbow_heart",
-        "item_crowbar",
-        "item_disc",
-        "item_disposable_camera",
-        "item_dynamite",
-        "item_dynamite_cube",
-        "item_egg",
-        "item_flaregun",
-        "item_flashbang",
-        "item_flashlight",
-        "item_flashlight_mega",
-        "item_flashlight_red",
-        "item_floppy3",
-        "item_floppy5",
-        "item_football",
-        "item_frying_pan",
-        "item_glowstick",
-        "item_goldbar",
-        "item_grenade",
-        "item_heart_chunk",
-        "item_heart_gun",
-        "item_heartchocolatebox",
-        "item_hh_key",
-        "item_hookshot",
-        "item_hoverpad",
-        "item_impulse_grenade",
-        "item_jetpack",
-        "item_keycard",
-        "item_lance",
-        "item_large_banana",
-        "item_laptop",
-        "item_laptop_dog",
-        "item_laptop_nyan",
-        "item_laptop_rust",
-        "item_laptop_surprise",
-        "item_laptop_vapor",
-        "item_laptop_winxp",
-        "item_lemon",
-        "item_lolipop",
-        "item_mike",
-        "item_military_holster",
-        "item_mini_cactus",
-        "item_money_box",
-        "item_money_clip",
-        "item_money_pile",
-        "item_moneybag",
-        "item_newspaper",
-        "item_newspaper_crumpled",
-        "item_nyan_cat",
-        "item_paper_bag",
-        "item_pencil",
-        "item_pencil_box",
-        "item_pencil_drawing",
-        "item_pencil_giraffe",
-        "item_pencil_nyan",
-        "item_pencil_paper",
-        "item_pencil_paper_small",
-        "item_pencil_paper_white",
-        "item_pencil_sheep",
-        "item_pepper_shaker",
-        "item_pizza",
-        "item_pizza_box",
-        "item_pizza_box_open",
-        "item_pizza_slices",
-        "item_pizza_slices_cheese",
-        "item_pizza_slices_pepperoni",
-        "item_pizza_slices_veggie",
-        "item_pizza_toppings",
-        "item_pizza_toppings_cheese",
-        "item_pizza_toppings_pepperoni",
-        "item_pizza_toppings_veggie",
-        "item_plastic_cup",
-        "item_plastic_cup_red",
-        "item_plastic_cup_red_filled",
-        "item_plastic_cup_straw",
-        "item_plastic_cup_straw_red",
-        "item_plastic_cup_straw_red_filled",
-        "item_plastic_cup_straw_strawberry",
-        "item_plastic_cup_straw_strawberry_filled",
-        "item_plastic_cup_straw_vanilla",
-        "item_plastic_cup_straw_vanilla_filled",
-        "item_plastic_cup_vanilla",
-        "item_plastic_cup_vanilla_filled",
-        "item_plastic_cup_water",
-        "item_plastic_cup_water_filled",
-        "item_potted_plant",
-        "item_potted_plant_fancy",
-        "item_potted_plant_small",
-        "item_raspberry",
-        "item_raspberry_large",
-        "item_rope",
-        "item_salt_shaker",
-        "item_sandwich",
-        "item_sandwich_club",
-        "item_sandwich_sub",
-        "item_sandwich_tuna",
-        "item_screwdriver",
-        "item_sewing_kit",
-        "item_shiny_gem",
-        "item_snowball",
-        "item_soda_can",
-        "item_soda_can_empty",
-        "item_soda_can_open",
-        "item_soda_can_redbull",
-        "item_soda_can_redbull_empty",
-        "item_soda_can_redbull_open",
-        "item_soda_can_sunkist",
-        "item_soda_can_sunkist_empty",
-        "item_soda_can_sunkist_open",
-        "item_soda_can_sunkist_peeled",
-        "item_soda_can_sunkist_peeled_empty",
-        "item_soda_can_sunkist_peeled_open",
-        "item_soda_can_sprite",
-        "item_soda_can_sprite_empty",
-        "item_soda_can_sprite_open",
-        "item_soda_can_vanilla",
-        "item_soda_can_vanilla_empty",
-        "item_soda_can_vanilla_open",
-        "item_soda_can_vanilla_peeled",
-        "item_soda_can_vanilla_peeled_empty",
-        "item_soda_can_vanilla_peeled_open",
-        "item_soda_can_water",
-        "item_soda_can_water_empty",
-        "item_soda_can_water_open",
-        "item_sparkler",
-        "item_stick",
-        "item_stick_bent",
-        "item_stick_broken",
-        "item_stick_snowman",
-        "item_strawberry",
-        "item_strawberry_large",
-        "item_tomato",
-        "item_tomato_large",
-        "item_toy_car",
-        "item_toy_doll",
-        "item_toy_robot",
-        "item_trampoline",
-        "item_trampoline_broken",
-        "item_trampoline_broken_top",
-        "item_trampoline_broken_top_white",
-        "item_trampoline_broken_white",
-        "item_trampoline_top",
-        "item_trampoline_white",
-        "item_watermelon",
-        "item_watermelon_large",
-        "item_wrench"
-      ];
+<h3>Generated JSON:</h3>
+<pre id="jsonOutput"></pre>
 
-      const mainItemsContainer = document.getElementById('mainItemsContainer');
-      const addMainItemBtn = document.getElementById('addMainItemBtn');
-      const jsonOutput = document.getElementById('jsonOutput');
+<script>
+  const itemIDs = [
+    "None",
+    "item_anti_gravity_grenade",
+    "item_apple",
+    "item_arrow",
+    "item_arrow_heart",
+    "item_arrow_lightbulb",
+    "item_backpack",
+    "item_backpack_black",
+    "item_backpack_green",
+    "item_backpack_large_base",
+    "item_backpack_large_basketball",
+    "item_backpack_large_clover",
+    "item_backpack_pink",
+    "item_backpack_small_base",
+    "item_backpack_white",
+    "item_backpack_with_flashlight",
+    "item_balloon",
+    "item_balloon_heart",
+    "item_banana",
+    "item_baseball_bat",
+    "item_big_cup",
+    "item_boombox",
+    "item_boombox_neon",
+    "item_box_fan",
+    "item_calculator",
+    "item_cardboard_box",
+    "item_cash",
+    "item_cash_mega_pile",
+    "item_cash_pile",
+    "item_clapper",
+    "item_cluster_grenade",
+    "item_cola",
+    "item_cola_large",
+    "item_company_ration",
+    "item_company_ration_heal",
+    "item_cracker",
+    "item_crate",
+    "item_crossbow",
+    "item_crossbow_heart",
+    "item_crowbar",
+    "item_disc",
+    "item_disposable_camera",
+    "item_dynamite",
+    "item_dynamite_cube",
+    "item_egg",
+    "item_flaregun",
+    "item_flashbang",
+    "item_flashlight",
+    "item_flashlight_mega",
+    "item_flashlight_red",
+    "item_floppy3",
+    "item_floppy5",
+    "item_football",
+    "item_frying_pan",
+    "item_glowstick",
+    "item_goldbar",
+    "item_grenade",
+    "item_heart_chunk",
+    "item_heart_gun",
+    "item_heartchocolatebox",
+    "item_hh_key",
+    "item_hookshot",
+    "item_hoverpad",
+    "item_impulse_grenade",
+    "item_jetpack",
+    "item_keycard",
+    "item_lance",
+    "item_large_banana",
+    "item_mug",
+    "item_nut",
+    "item_ogre_hands",
+    "item_ore_copper_l",
+    "item_ore_copper_m",
+    "item_ore_copper_s",
+    "item_ore_gold_l",
+    "item_ore_gold_m",
+    "item_ore_gold_s",
+    "item_ore_hell",
+    "item_ore_silver_l",
+    "item_ore_silver_m",
+    "item_ore_silver_s",
+    "item_painting_canvas",
+    "item_paperpack",
+    "item_pelican_case",
+    "item_pickaxe",
+    "item_pickaxe_cny",
+    "item_pickaxe_cube",
+    "item_pipe",
+    "item_pinata_bat",
+    "item_plunger",
+    "item_pogostick",
+    "item_police_baton",
+    "item_pumpkin_pie",
+    "item_pumpkinjack",
+    "item_pumpkinjack_small",
+    "item_quiver",
+    "item_quiver_heart",
+    "item_radioactive_broccoli",
+    "item_randombox_mobloot_big",
+    "item_randombox_mobloot_medium",
+    "item_randombox_mobloot_small",
+    "item_randombox_mobloot_weapons",
+    "item_revolver",
+    "item_revolver_ammo",
+    "item_revolver_gold",
+    "item_rope",
+    "item_rpg",
+    "item_rpg_ammo",
+    "item_rpg_ammo_egg",
+    "item_rpg_cny",
+    "item_rpg_easter",
+    "item_rubberducky",
+    "item_ruby",
+    "item_saddle",
+    "item_scanner",
+    "item_scissors",
+    "item_shield",
+    "item_shield_bones",
+    "item_shield_police",
+    "item_shotgun",
+    "item_shotgun_ammo",
+    "item_shredder",
+    "item_shrinking_broccoli",
+    "item_snowball",
+    "item_stapler",
+    "item_stick_armbones",
+    "item_stick_bone",
+    "item_sticker_dispenser",
+    "item_sticky_dynamite",
+    "item_stinky_cheese",
+    "item_tablet",
+    "item_tapedispenser",
+    "item_tele_grenade",
+    "item_theremin",
+    "item_timebomb",
+    "item_toilet_paper",
+    "item_toilet_paper_mega",
+    "item_toilet_paper_roll_empty",
+    "item_treestick",
+    "item_tripwire_explosive",
+    "item_trophy",
+    "item_turkey_leg",
+    "item_turkey_whole",
+    "item_umbrella",
+    "item_umbrella_clover",
+    "item_unidentified",
+    "item_upsidedown_loot",
+    "item_uranium_chunk_l",
+    "item_uranium_chunk_m",
+    "item_uranium_chunk_s",
+    "item_whoopie",
+    "item_zipline_gun"
+  ];
 
-      // Keep track of main items count
-      let mainItemCount = 0;
-      const maxMainItems = 5;
+  const mainItemsContainer = document.getElementById('mainItemsContainer');
+  const addMainItemBtn = document.getElementById('addMainItemBtn');
 
-      // Create a color preview box for input
-      function createColorPreview(color = '') {
-        const preview = document.createElement('span');
-        preview.className = 'color-preview';
-        preview.style.backgroundColor = color;
-        return preview;
+  function createItemSelect() {
+    const select = document.createElement('select');
+    itemIDs.forEach(item => {
+      if(item !== "None"){
+        const option = document.createElement('option');
+        option.value = item;
+        option.textContent = item;
+        select.appendChild(option);
       }
+    });
+    return select;
+  }
 
-      // Create a child item block (for main item's children)
-      function createChildItemBlock(mainItemIndex) {
-        const childBlock = document.createElement('div');
-        childBlock.className = 'child-block';
+  // Creates a small labeled number input
+  function createNumberInput(labelText, defaultValue = 0, min = 0, max = 360) {
+    const container = document.createElement('div');
+    container.className = 'item-properties';
 
-        // Child item select
-        const childItemLabel = document.createElement('label');
-        childItemLabel.textContent = 'Child Item';
-        const childItemSelect = document.createElement('select');
-        itemIDs.forEach(id => {
-          const option = document.createElement('option');
-          option.value = id;
-          option.textContent = id === 'None' ? 'None' : id;
-          childItemSelect.appendChild(option);
-        });
-        childItemSelect.value = 'None';
+    const label = document.createElement('label');
+    label.textContent = labelText;
 
-        childItemLabel.appendChild(childItemSelect);
-        childBlock.appendChild(childItemLabel);
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.value = defaultValue;
+    input.min = min;
+    input.max = max;
 
-        // Child item key input
-        const childKeyLabel = document.createElement('label');
-        childKeyLabel.textContent = 'Child Item Key';
-        const childKeyInput = document.createElement('input');
-        childKeyInput.type = 'text';
-        childKeyInput.placeholder = 'Enter child item key';
-        childKeyInput.maxLength = 100;
-        childKeyLabel.appendChild(childKeyInput);
-        childBlock.appendChild(childKeyLabel);
+    container.appendChild(label);
+    container.appendChild(input);
 
-        // Child item color input
-        const childColorLabel = document.createElement('label');
-        childColorLabel.textContent = 'Child Item Color';
-        const childColorInput = document.createElement('input');
-        childColorInput.type = 'text';
-        childColorInput.placeholder = 'Hex color (e.g. #123abc)';
-        childColorInput.maxLength = 7;
-        childColorInput.style.width = '160px';
+    return { container, input };
+  }
 
-        // Child color preview
-        const childColorPreview = createColorPreview();
-        childColorInput.addEventListener('input', () => {
-          childColorPreview.style.backgroundColor = childColorInput.value || '';
-        });
-        childColorLabel.appendChild(childColorInput);
-        childColorLabel.appendChild(childColorPreview);
-        childBlock.appendChild(childColorLabel);
+  function createMainItemBox() {
+    const box = document.createElement('div');
+    box.className = 'main-item-box';
 
-        // Button to remove this child block
-        const removeChildBtn = document.createElement('button');
-        removeChildBtn.textContent = 'Remove Child Item';
-        removeChildBtn.type = 'button';
-        removeChildBtn.className = 'remove-btn';
-        removeChildBtn.style.marginTop = '8px';
-        removeChildBtn.addEventListener('click', () => {
-          childBlock.remove();
-        });
-        childBlock.appendChild(removeChildBtn);
+    // Main item select + remove main item button
+    const mainLabel = document.createElement('label');
+    mainLabel.textContent = 'Choose Main Item:';
+    const mainSelect = createItemSelect();
 
-        return childBlock;
-      }
+    const removeMainBtn = document.createElement('button');
+    removeMainBtn.textContent = 'Remove Main Item';
+    removeMainBtn.className = 'remove-btn';
+    removeMainBtn.type = "button";
 
-      // Create a main item block
-      function createMainItemBlock(index) {
-        const container = document.createElement('div');
-        container.className = 'slot-container';
-        container.dataset.index = index;
+    removeMainBtn.addEventListener('click', () => {
+      mainItemsContainer.removeChild(box);
+      updateAddMainItemBtn();
+    });
 
-        // Main Item select
-        const itemLabel = document.createElement('label');
-        itemLabel.textContent = 'Main Item';
-        const itemSelect = document.createElement('select');
-        itemIDs.forEach(id => {
-          const option = document.createElement('option');
-          option.value = id;
-          option.textContent = id === 'None' ? 'None' : id;
-          itemSelect.appendChild(option);
-        });
-        itemSelect.value = 'None';
-        itemLabel.appendChild(itemSelect);
-        container.appendChild(itemLabel);
+    // Properties inputs for main item
+    const mainProps = document.createElement('div');
+    mainProps.className = 'item-properties-container';
 
-        // Main Item key input
-        const keyLabel = document.createElement('label');
-        keyLabel.textContent = 'Main Item Key';
-        const keyInput = document.createElement('input');
-        keyInput.type = 'text';
-        keyInput.placeholder = 'Enter main item key';
-        keyInput.maxLength = 100;
-        keyLabel.appendChild(keyInput);
-        container.appendChild(keyLabel);
+    const hueInput = createNumberInput('colorHue', 0, 0, 360);
+    const saturationInput = createNumberInput('colorSaturation', 0, 0, 100);
+    const scaleInput = createNumberInput('scaleModifier', 0, -10, 10);
+    const ammoInput = createNumberInput('ammo', 0, 0, 999999);
 
-        // Main Item color input
-        const colorLabel = document.createElement('label');
-        colorLabel.textContent = 'Main Item Color';
-        const colorInput = document.createElement('input');
-        colorInput.type = 'text';
-        colorInput.placeholder = 'Hex color (e.g. #123abc)';
-        colorInput.maxLength = 7;
-        colorInput.style.width = '160px';
+    mainProps.appendChild(hueInput.container);
+    mainProps.appendChild(saturationInput.container);
+    mainProps.appendChild(scaleInput.container);
+    mainProps.appendChild(ammoInput.container);
 
-        // Color preview box
-        const colorPreview = createColorPreview();
-        colorInput.addEventListener('input', () => {
-          colorPreview.style.backgroundColor = colorInput.value || '';
-        });
-        colorLabel.appendChild(colorInput);
-        colorLabel.appendChild(colorPreview);
-        container.appendChild(colorLabel);
+    // Children container + add child button
+    const childrenTitle = document.createElement('h4');
+    childrenTitle.textContent = 'Children Items:';
 
-        // Children container
-        const childrenContainer = document.createElement('div');
-        container.appendChild(childrenContainer);
+    const childrenContainer = document.createElement('div');
 
-        // Add child button
-        const addChildBtn = document.createElement('button');
-        addChildBtn.textContent = '+ Add Child Item';
-        addChildBtn.type = 'button';
-        addChildBtn.style.marginTop = '10px';
-        addChildBtn.addEventListener('click', () => {
-          const childBlock = createChildItemBlock(index);
-          childrenContainer.appendChild(childBlock);
-        });
-        container.appendChild(addChildBtn);
+    const addChildBtn = document.createElement('button');
+    addChildBtn.textContent = '+ Add Child Item';
+    addChildBtn.type = "button";
+    addChildBtn.style.marginBottom = '20px';
 
-        // Remove main item button
-        const removeBtn = document.createElement('button');
-        removeBtn.textContent = 'Remove Main Item';
-        removeBtn.type = 'button';
-        removeBtn.className = 'remove-btn';
-        removeBtn.style.marginTop = '12px';
-        removeBtn.addEventListener('click', () => {
-          container.remove();
-          mainItemCount--;
-          addMainItemBtn.disabled = false;
-          updateMainItemIndices();
-        });
-        container.appendChild(removeBtn);
+    addChildBtn.addEventListener('click', () => {
+      const childDiv = document.createElement('div');
+      childDiv.className = 'child-item';
 
-        return container;
-      }
+      const childSelect = createItemSelect();
 
-      // Update the dataset indices of main items after removing one
-      function updateMainItemIndices() {
-        const mainItems = mainItemsContainer.querySelectorAll('.slot-container');
-        mainItems.forEach((item, idx) => {
-          item.dataset.index = idx;
-        });
-      }
+      // Child properties inputs
+      const childHueInput = createNumberInput('colorHue', 0, 0, 360);
+      const childSaturationInput = createNumberInput('colorSaturation', 0, 0, 100);
+      const childScaleInput = createNumberInput('scaleModifier', 0, -10, 10);
+      const childAmmoInput = createNumberInput('ammo', 0, 0, 999999);
 
-      addMainItemBtn.addEventListener('click', () => {
-        if (mainItemCount >= maxMainItems) return;
-        const newIndex = mainItemCount;
-        const mainItemBlock = createMainItemBlock(newIndex);
-        mainItemsContainer.appendChild(mainItemBlock);
-        mainItemCount++;
-        if (mainItemCount >= maxMainItems) {
-          addMainItemBtn.disabled = true;
+      // Remove child button
+      const removeChildBtn = document.createElement('button');
+      removeChildBtn.textContent = 'Remove Child Item';
+      removeChildBtn.className = 'remove-btn';
+      removeChildBtn.type = "button";
+
+      removeChildBtn.addEventListener('click', () => {
+        childrenContainer.removeChild(childDiv);
+      });
+
+      childDiv.appendChild(childSelect);
+      childDiv.appendChild(childHueInput.container);
+      childDiv.appendChild(childSaturationInput.container);
+      childDiv.appendChild(childScaleInput.container);
+      childDiv.appendChild(childAmmoInput.container);
+      childDiv.appendChild(removeChildBtn);
+
+      childrenContainer.appendChild(childDiv);
+    });
+
+    box.appendChild(mainLabel);
+    box.appendChild(mainSelect);
+    box.appendChild(mainProps);
+    box.appendChild(childrenTitle);
+    box.appendChild(childrenContainer);
+    box.appendChild(addChildBtn);
+    box.appendChild(removeMainBtn);
+
+    return {
+      box,
+      mainSelect,
+      hueInput: hueInput.input,
+      saturationInput: saturationInput.input,
+      scaleInput: scaleInput.input,
+      ammoInput: ammoInput.input,
+      childrenContainer,
+    };
+  }
+
+  function updateAddMainItemBtn() {
+    addMainItemBtn.disabled = mainItemsContainer.children.length >= 5;
+  }
+
+  addMainItemBtn.addEventListener('click', () => {
+    const { box } = createMainItemBox();
+    mainItemsContainer.appendChild(box);
+    updateAddMainItemBtn();
+  });
+
+  function generateJSON() {
+    const mainBoxes = mainItemsContainer.querySelectorAll('.main-item-box');
+    const result = [];
+
+    mainBoxes.forEach(box => {
+      const mainSelect = box.querySelector('select');
+      const colorHue = box.querySelector('input[type="number"][aria-label="colorHue"]') || box.querySelector('input:nth-of-type(1)');
+      const colorSaturation = box.querySelector('input[type="number"]:nth-of-type(2)') || box.querySelector('input:nth-of-type(2)');
+      const scaleModifier = box.querySelector('input[type="number"]:nth-of-type(3)') || box.querySelector('input:nth-of-type(3)');
+      const ammo = box.querySelector('input[type="number"]:nth-of-type(4)') || box.querySelector('input:nth-of-type(4)');
+
+      const mainItemID = mainSelect.value;
+
+      if (!mainItemID) return;
+
+      const colorHueVal = parseInt(box.querySelector('input[type="number"]').value) || 0;
+      const colorSatVal = parseInt(box.querySelectorAll('input[type="number"]')[1].value) || 0;
+      const scaleVal = parseFloat(box.querySelectorAll('input[type="number"]')[2].value) || 0;
+      const ammoVal = parseInt(box.querySelectorAll('input[type="number"]')[3].value) || 0;
+
+      const childrenDivs = box.querySelectorAll('.child-item');
+      const children = [];
+
+      childrenDivs.forEach(child => {
+        const childSelect = child.querySelector('select');
+        const childHue = parseInt(child.querySelectorAll('input[type="number"]')[0].value) || 0;
+        const childSat = parseInt(child.querySelectorAll('input[type="number"]')[1].value) || 0;
+        const childScale = parseFloat(child.querySelectorAll('input[type="number"]')[2].value) || 0;
+        const childAmmo = parseInt(child.querySelectorAll('input[type="number"]')[3].value) || 0;
+
+        const childID = childSelect.value;
+
+        if(childID && childID !== "None") {
+          children.push({
+            itemID: childID,
+            colorHue: childHue,
+            colorSaturation: childSat,
+            scaleModifier: childScale,
+            ammo: childAmmo,
+          });
         }
       });
 
-      // Generate JSON string for the entire inventory structure
-      function generateJSON() {
-        const mainItems = mainItemsContainer.querySelectorAll('.slot-container');
-        const objectsArray = [];
+      result.push({
+        itemID: mainItemID,
+        colorHue: colorHueVal,
+        colorSaturation: colorSatVal,
+        scaleModifier: scaleVal,
+        ammo: ammoVal,
+        children: children
+      });
+    });
 
-        mainItems.forEach(mainItem => {
-          const idx = mainItem.dataset.index;
-
-          const mainItemSelect = mainItem.querySelector('label:nth-child(1) select');
-          const mainKeyInput = mainItem.querySelector('label:nth-child(2) input');
-          const mainColorInput = mainItem.querySelector('label:nth-child(3) input');
-
-          if (!mainKeyInput.value.trim()) return; // skip if no key
-
-          // Children
-          const childrenContainer = mainItem.querySelector('div');
-          const childBlocks = childrenContainer.querySelectorAll('.child-block');
-
-          const childrenObjects = [];
-
-          childBlocks.forEach(child => {
-            const childItemSelect = child.querySelector('label:nth-child(1) select');
-            const childKeyInput = child.querySelector('label:nth-child(2) input');
-            const childColorInput = child.querySelector('label:nth-child(3) input');
-
-            if (!childKeyInput.value.trim()) return;
-
-            childrenObjects.push({
-              collection: "items",
-              key: childKeyInput.value.trim(),
-              permission: "owner",
-              value: JSON.stringify({
-                id: childItemSelect.value,
-                color: childColorInput.value.trim(),
-              }),
-            });
-          });
-
-          // Compose main item object with children as a JSON string in value
-          const mainValueObj = {
-            id: mainItemSelect.value,
-            color: mainColorInput.value.trim(),
-            children: childrenObjects,
-          };
-
-          objectsArray.push({
-            collection: "items",
-            key: mainKeyInput.value.trim(),
-            permission: "owner",
-            value: JSON.stringify(mainValueObj),
-          });
-        });
-
-        jsonOutput.textContent = JSON.stringify(objectsArray, null, 2);
-      }
-    </script>
-  </body>
-</html>
+    document.getElementById('jsonOutput').textContent = JSON.stringify(result, null, 2);
+  }
+</script>
