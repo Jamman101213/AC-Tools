@@ -530,21 +530,79 @@
     document.getElementById('jsonOutput').textContent = JSON.stringify(allMainItems, null, 2);
   }
 
-  // Update add button enable/disable (limit max 5 main items)
-  function updateAddMainItemBtn() {
-    addMainItemBtn.disabled = mainItemsContainer.children.length >= 5;
-  }
+ function generateJSON() {
+  // Create an array to hold all main items in the final JSON
+  const objectsArray = [];
 
-  addMainItemBtn.addEventListener('click', () => {
-    if (mainItemsContainer.children.length < 5) {
-      const newItem = createMainItemBox();
-      mainItemsContainer.appendChild(newItem.box);
-      updateAddMainItemBtn();
-    }
+  // Loop through all main item boxes
+  const mainBoxes = mainItemsContainer.querySelectorAll('.main-item-box');
+  mainBoxes.forEach(mainBox => {
+    // Get main item data
+    const mainItemKey = mainBox.mainSelect.value;
+    if (mainItemKey === "None") return; // skip if none selected
+
+    // Get the properties
+    const colorHue = Number(mainBox.hueInput.value) || 0;
+    const colorSaturation = Number(mainBox.saturationInput.value) || 0;
+    const scaleModifier = Number(mainBox.scaleInput.value) || 0;
+    const ammo = Number(mainBox.ammoInput.value) || 0;
+
+    // Collect children items
+    const children = [];
+    const childDivs = mainBox.childrenContainer.querySelectorAll('.child-item');
+    childDivs.forEach(childDiv => {
+      const childSelect = childDiv.querySelector('select');
+      const childHueInput = childDiv.querySelector('input[type="number"]:nth-of-type(1)');
+      const childSatInput = childDiv.querySelector('input[type="number"]:nth-of-type(2)');
+      const childScaleInput = childDiv.querySelector('input[type="number"]:nth-of-type(3)');
+      const childAmmoInput = childDiv.querySelector('input[type="number"]:nth-of-type(4)');
+
+      if (!childSelect || childSelect.value === "None") return;
+
+      children.push({
+        itemId: childSelect.value,
+        colorHue: Number(childHueInput.value) || 0,
+        colorSaturation: Number(childSatInput.value) || 0,
+        scaleModifier: Number(childScaleInput.value) || 0,
+        ammo: Number(childAmmoInput.value) || 0,
+      });
+    });
+
+    // Build the value string for main item with children as JSON inside
+    const valueObj = {
+      colorHue,
+      colorSaturation,
+      scaleModifier,
+      ammo,
+      children: children.map(c => ({
+        itemId: c.itemId,
+        colorHue: c.colorHue,
+        colorSaturation: c.colorSaturation,
+        scaleModifier: c.scaleModifier,
+        ammo: c.ammo,
+      })),
+    };
+
+    // Push main item object following your JSON format
+    objectsArray.push({
+      collection: "itemslots",
+      key: mainItemKey,
+      permissions: {
+        read: true,
+        write: true,
+      },
+      value: JSON.stringify(valueObj),
+    });
   });
 
-  // Initialize add button state
-  updateAddMainItemBtn();
+  // Put the entire array inside a main object (if needed) or just output array
+  const finalJSON = { objects: objectsArray };
+
+  // Show the formatted JSON in the pre tag
+  const jsonOutput = document.getElementById('jsonOutput');
+  jsonOutput.textContent = JSON.stringify(finalJSON, null, 2);
+}
+
 
 
     document.getElementById('jsonOutput').textContent = JSON.stringify(result, null, 2);
