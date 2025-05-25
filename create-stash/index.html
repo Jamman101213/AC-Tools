@@ -1,72 +1,144 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Value JSON Editor</title>
+  <title>Edit "value" JSON</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      padding: 1em;
-      background: #f0f0f0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+      background: linear-gradient(135deg, #f9ece3, #f0d8c0);
+      color: #6b4c3b;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
-    .editor {
-      display: flex;
-      flex-direction: column;
-      gap: 1em;
-      max-width: 800px;
-      margin: auto;
+    .slot-container, .child-block {
+      border: 2px solid #cbb092;
+      padding: 15px;
+      margin-bottom: 15px;
+      background-color: #fff6ee;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(203, 176, 146, 0.25);
     }
-    textarea {
-      width: 100%;
-      height: 300px;
-      font-family: monospace;
+    .child-block {
+      border-left: 4px solid #bfa77a;
+      margin-left: 20px;
+      padding-left: 15px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+    input[type="number"] {
+      width: 100px;
+      padding: 5px;
+      border: 1px solid #bfa77a;
+      border-radius: 4px;
     }
     button {
-      padding: 10px 20px;
-      font-size: 1em;
+      margin-top: 10px;
+      padding: 8px 14px;
+      background-color: #a67856;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 700;
     }
-    pre {
-      background: #222;
-      color: #0f0;
-      padding: 1em;
-      overflow: auto;
+    button:hover {
+      background-color: #7a5633;
+    }
+    .remove-btn {
+      background-color: #d26b4d;
+      margin-left: 10px;
+    }
+    .remove-btn:hover {
+      background-color: #a34c37;
     }
   </style>
 </head>
 <body>
-  <div class="editor">
-    <h1>Edit "value" Field</h1>
-    <textarea id="valueEditor" placeholder="Paste or type the 'value' JSON here..."></textarea>
-    <button onclick="generateFinalJson()">Generate Final JSON</button>
-    <h2>Output</h2>
-    <pre id="output"></pre>
-  </div>
 
-  <script>
-    function generateFinalJson() {
-      const valueInput = document.getElementById("valueEditor").value;
-      try {
-        const parsed = JSON.parse(valueInput); // Ensure it's valid JSON
-        const stringified = JSON.stringify(parsed); // Then stringify again for the field
+<h1>Edit "value" JSON</h1>
 
-        const finalJson = {
-          objects: [
-            {
-              collection: "user_inventory",
-              key: "stash",
-              permission_read: 1,
-              permission_write: 1,
-              value: stringified
-            }
-          ]
-        };
+<div id="editors"></div>
 
-        document.getElementById("output").textContent = JSON.stringify(finalJson, null, 2);
-      } catch (e) {
-        document.getElementById("output").textContent = "Invalid JSON in value field.";
-      }
+<button onclick="addEditor()">Add Item</button>
+<button onclick="generateJSON()">Generate JSON</button>
+
+<h3>Output JSON:</h3>
+<textarea id="output" style="width: 100%; height: 250px;" readonly></textarea>
+
+<script>
+  function createEditor(isChild = false) {
+    const container = document.createElement('div');
+    container.className = isChild ? 'child-block' : 'slot-container';
+    container.innerHTML = `
+      <label>Hue: <input type="number" class="hue" value="0" step="0.1"></label>
+      <label>Saturation: <input type="number" class="saturation" value="0" step="0.1"></label>
+      <label>State: <input type="number" class="state" value="0" step="1"></label>
+      <label>Ammo: <input type="number" class="ammo" value="0" step="1"></label>
+      <label>Scale Modifier: <input type="number" class="scale" value="0" step="0.1"></label>
+      <div class="children-container"></div>
+      <button onclick="addChild(this)">Add Child</button>
+      ${isChild ? '<button class="remove-btn" onclick="removeEditor(this)">Remove</button>' : ''}
+    `;
+    return container;
+  }
+
+  function addEditor() {
+    const editorsDiv = document.getElementById('editors');
+    const newEditor = createEditor(false);
+    editorsDiv.appendChild(newEditor);
+  }
+
+  function addChild(button) {
+    const container = button.parentElement.querySelector('.children-container');
+    const childEditor = createEditor(true);
+    container.appendChild(childEditor);
+  }
+
+  function removeEditor(button) {
+    button.parentElement.remove();
+  }
+
+  function gatherData(container) {
+    // Read input values
+    const hue = parseFloat(container.querySelector('.hue').value) || 0;
+    const saturation = parseFloat(container.querySelector('.saturation').value) || 0;
+    const state = parseInt(container.querySelector('.state').value) || 0;
+    const ammo = parseInt(container.querySelector('.ammo').value) || 0;
+    const scale = parseFloat(container.querySelector('.scale').value) || 0;
+
+    // Get children data recursively
+    const childrenContainers = container.querySelector('.children-container').children;
+    const children = [];
+    for (let child of childrenContainers) {
+      children.push(gatherData(child));
     }
-  </script>
+
+    const obj = {};
+    if(hue !== 0) obj.colorHue = hue;
+    if(saturation !== 0) obj.colorSaturation = saturation;
+    if(state !== 0) obj.state = state;
+    if(ammo !== 0) obj.ammo = ammo;
+    if(scale !== 0) obj.scaleModifier = scale;
+    if(children.length > 0) obj.children = children;
+
+    return obj;
+  }
+
+  function generateJSON() {
+    const editors = document.getElementById('editors').children;
+    const results = [];
+    for (let editor of editors) {
+      results.push(gatherData(editor));
+    }
+    document.getElementById('output').value = JSON.stringify(results, null, 2);
+  }
+
+  // Start with one editor
+  addEditor();
+</script>
+
 </body>
 </html>
