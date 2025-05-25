@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="google-adsense-account" content="ca-pub-6213603518465024">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6213603518465024" crossorigin="anonymous"></script>
+<link rel="icon" href="https://cdn.glitch.global/d52a6415-826b-4b02-82db-e300df7a8506/Logo?v=1747925805307" type="image/png" />
+<title>Animal Company Item Maker</title>
+<style>
+  /* Styling omitted for brevity (same as previous) */
+</style>
+</head>
+<body>
+<button id="modeToggle" onclick="toggleMode()">Toggle Light/Dark</button>
+<h1>Animal Company Json Maker</h1>
+<label for="searchItemID">Search Item ID:</label>
+<input type="text" id="searchItemID" placeholder="Type to filter item IDs...">
+<input type="file" id="jsonFileInput" accept=".json" style="display:none" onchange="handleFileSelect(event)" />
+<button onclick="document.getElementById('jsonFileInput').click()">Import JSON</button>
+<div id="slotEditors"></div>
+<button onclick="addSlot()">Add Slot</button>
+<button onclick="generateJSON()">Generate JSON</button>
+<button onclick="downloadJSON()">Download JSON</button>
+<h3>Generated JSON:</h3>
+<textarea id="jsonOutput" readonly></textarea>
+<script>
+const slots = ["back", "leftHand", "rightHand", "leftHip", "rightHip"];
+const itemIDs = [
+  "None", "item_apple", "item_banana", "item_jetpack", "item_flashlight" // shortened for brevity
+];
+
+function toggleMode() {
+  document.body.classList.toggle("dark-mode");
+}
+
+document.getElementById("searchItemID").addEventListener("input", function () {
+  const query = this.value.toLowerCase();
+  document.querySelectorAll(".item-id").forEach(select => {
+    Array.from(select.options).forEach(option => {
+      option.style.display = option.value.toLowerCase().includes(query) ? "block" : "none";
+    });
+  });
+});
+
+function addSlot(data = {}) {
+  const container = document.createElement("div");
+  container.className = "slot-container";
+  container.innerHTML = `
+    <label>Slot:</label>
+    <select class="slot">
+      ${slots.map(s => `<option value="${s}" ${data.slot === s ? 'selected' : ''}>${s}</option>`).join('')}
+    </select>
+    <label>Item ID:</label>
+    <select class="item-id">
+      ${itemIDs.map(id => `<option value="${id}" ${data.itemId === id ? 'selected' : ''}>${id}</option>`).join('')}
+    </select>
+    <label>Color:</label>
+    <input type="color" class="color" value="${data.color || '#ffffff'}">
+    <label>Children:</label>
+    <textarea class="children" placeholder='Optional nested items JSON'>${data.children || ''}</textarea>
+    <button class="remove-btn" onclick="this.parentElement.remove()">Remove</button>
+  `;
+  document.getElementById("slotEditors").appendChild(container);
+}
+
+function generateJSON() {
+  const output = [];
+  document.querySelectorAll(".slot-container").forEach(container => {
+    const slot = container.querySelector(".slot").value;
+    const itemId = container.querySelector(".item-id").value;
+    const color = container.querySelector(".color").value;
+    let childrenText = container.querySelector(".children").value;
+    let children;
+    try {
+      children = childrenText ? JSON.parse(childrenText) : undefined;
+    } catch {
+      children = undefined;
+    }
+    const obj = { slot, itemId, color };
+    if (children) obj.children = children;
+    output.push(obj);
+  });
+  document.getElementById("jsonOutput").value = JSON.stringify(output, null, 2);
+}
+
+function downloadJSON() {
+  const blob = new Blob([document.getElementById("jsonOutput").value], { type: 'application/json' });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "animal_company_items.json";
+  link.click();
+}
+
+function handleFileSelect(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      document.getElementById("slotEditors").innerHTML = "";
+      data.forEach(slot => addSlot(slot));
+    } catch (err) {
+      alert("Invalid JSON file.");
+    }
+  };
+  reader.readAsText(file);
+}
+</script>
+</body>
+</html>
