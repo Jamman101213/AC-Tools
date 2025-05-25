@@ -1,144 +1,271 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Edit "value" JSON</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      padding: 20px;
-      background: linear-gradient(135deg, #f9ece3, #f0d8c0);
-      color: #6b4c3b;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-    .slot-container, .child-block {
-      border: 2px solid #cbb092;
-      padding: 15px;
-      margin-bottom: 15px;
-      background-color: #fff6ee;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(203, 176, 146, 0.25);
-    }
-    .child-block {
-      border-left: 4px solid #bfa77a;
-      margin-left: 20px;
-      padding-left: 15px;
-    }
-    label {
-      display: block;
-      margin-top: 10px;
-      font-weight: 600;
-    }
-    input[type="number"] {
-      width: 100px;
-      padding: 5px;
-      border: 1px solid #bfa77a;
-      border-radius: 4px;
-    }
-    button {
-      margin-top: 10px;
-      padding: 8px 14px;
-      background-color: #a67856;
-      border: none;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: 700;
-    }
-    button:hover {
-      background-color: #7a5633;
-    }
-    .remove-btn {
-      background-color: #d26b4d;
-      margin-left: 10px;
-    }
-    .remove-btn:hover {
-      background-color: #a34c37;
-    }
-  </style>
-</head>
-<body>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #222;
+    color: #eee;
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+  }
 
-<h1>Edit "value" JSON</h1>
+  label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+    font-size: 16px;
+  }
 
-<div id="editors"></div>
+  select {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #444;
+    background-color: #333;
+    color: #eee;
+    margin-bottom: 15px;
+  }
 
-<button onclick="addEditor()">Add Item</button>
+  button {
+    background-color: #5a9;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  button:hover {
+    background-color: #48a868;
+  }
+
+  pre {
+    background-color: #111;
+    border: 1px solid #555;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    overflow-x: auto;
+    max-height: 400px;
+  }
+</style>
+
+<label for="itemSelect">Choose an item to add inside backpack:</label>
+<select id="itemSelect"></select>
+
 <button onclick="generateJSON()">Generate JSON</button>
 
-<h3>Output JSON:</h3>
-<textarea id="output" style="width: 100%; height: 250px;" readonly></textarea>
+<h3>Generated JSON:</h3>
+<pre id="jsonOutput"></pre>
 
 <script>
-  function createEditor(isChild = false) {
-    const container = document.createElement('div');
-    container.className = isChild ? 'child-block' : 'slot-container';
-    container.innerHTML = `
-      <label>Hue: <input type="number" class="hue" value="0" step="0.1"></label>
-      <label>Saturation: <input type="number" class="saturation" value="0" step="0.1"></label>
-      <label>State: <input type="number" class="state" value="0" step="1"></label>
-      <label>Ammo: <input type="number" class="ammo" value="0" step="1"></label>
-      <label>Scale Modifier: <input type="number" class="scale" value="0" step="0.1"></label>
-      <div class="children-container"></div>
-      <button onclick="addChild(this)">Add Child</button>
-      ${isChild ? '<button class="remove-btn" onclick="removeEditor(this)">Remove</button>' : ''}
-    `;
-    return container;
-  }
+  const itemIDs = [
+    "None",
+    "item_anti_gravity_grenade",
+    "item_apple",
+    "item_arrow",
+    "item_arrow_heart",
+    "item_arrow_lightbulb",
+    "item_backpack",
+    "item_backpack_black",
+    "item_backpack_green",
+    "item_backpack_large_base",
+    "item_backpack_large_basketball",
+    "item_backpack_large_clover",
+    "item_backpack_pink",
+    "item_backpack_small_base",
+    "item_backpack_white",
+    "item_backpack_with_flashlight",
+    "item_balloon",
+    "item_balloon_heart",
+    "item_banana",
+    "item_baseball_bat",
+    "item_big_cup",
+    "item_boombox",
+    "item_boombox_neon",
+    "item_box_fan",
+    "item_calculator",
+    "item_cardboard_box",
+    "item_cash",
+    "item_cash_mega_pile",
+    "item_cash_pile",
+    "item_clapper",
+    "item_cluster_grenade",
+    "item_cola",
+    "item_cola_large",
+    "item_company_ration",
+    "item_company_ration_heal",
+    "item_cracker",
+    "item_crate",
+    "item_crossbow",
+    "item_crossbow_heart",
+    "item_crowbar",
+    "item_disc",
+    "item_disposable_camera",
+    "item_dynamite",
+    "item_dynamite_cube",
+    "item_egg",
+    "item_flaregun",
+    "item_flashbang",
+    "item_flashlight",
+    "item_flashlight_mega",
+    "item_flashlight_red",
+    "item_floppy3",
+    "item_floppy5",
+    "item_football",
+    "item_frying_pan",
+    "item_glowstick",
+    "item_goldbar",
+    "item_grenade",
+    "item_heart_chunk",
+    "item_heart_gun",
+    "item_heartchocolatebox",
+    "item_hh_key",
+    "item_hookshot",
+    "item_hoverpad",
+    "item_impulse_grenade",
+    "item_jetpack",
+    "item_keycard",
+    "item_lance",
+    "item_large_banana",
+    "item_mug",
+    "item_nut",
+    "item_ogre_hands",
+    "item_ore_copper_l",
+    "item_ore_copper_m",
+    "item_ore_copper_s",
+    "item_ore_gold_l",
+    "item_ore_gold_m",
+    "item_ore_gold_s",
+    "item_ore_hell",
+    "item_ore_silver_l",
+    "item_ore_silver_m",
+    "item_ore_silver_s",
+    "item_painting_canvas",
+    "item_paperpack",
+    "item_pelican_case",
+    "item_pickaxe",
+    "item_pickaxe_cny",
+    "item_pickaxe_cube",
+    "item_pipe",
+    "item_pinata_bat",
+    "item_plunger",
+    "item_pogostick",
+    "item_police_baton",
+    "item_pumpkin_pie",
+    "item_pumpkinjack",
+    "item_pumpkinjack_small",
+    "item_quiver",
+    "item_quiver_heart",
+    "item_radioactive_broccoli",
+    "item_randombox_mobloot_big",
+    "item_randombox_mobloot_medium",
+    "item_randombox_mobloot_small",
+    "item_randombox_mobloot_weapons",
+    "item_revolver",
+    "item_revolver_ammo",
+    "item_revolver_gold",
+    "item_rope",
+    "item_rpg",
+    "item_rpg_ammo",
+    "item_rpg_ammo_egg",
+    "item_rpg_cny",
+    "item_rpg_easter",
+    "item_rubberducky",
+    "item_ruby",
+    "item_saddle",
+    "item_scanner",
+    "item_scissors",
+    "item_shield",
+    "item_shield_bones",
+    "item_shield_police",
+    "item_shotgun",
+    "item_shotgun_ammo",
+    "item_shredder",
+    "item_shrinking_broccoli",
+    "item_snowball",
+    "item_stapler",
+    "item_stick_armbones",
+    "item_stick_bone",
+    "item_sticker_dispenser",
+    "item_sticky_dynamite",
+    "item_stinky_cheese",
+    "item_tablet",
+    "item_tapedispenser",
+    "item_tele_grenade",
+    "item_theremin",
+    "item_timebomb",
+    "item_toilet_paper",
+    "item_toilet_paper_mega",
+    "item_toilet_paper_roll_empty",
+    "item_treestick",
+    "item_tripwire_explosive",
+    "item_trophy",
+    "item_turkey_leg",
+    "item_turkey_whole",
+    "item_umbrella",
+    "item_umbrella_clover",
+    "item_unidentified",
+    "item_upsidedown_loot",
+    "item_uranium_chunk_l",
+    "item_uranium_chunk_m",
+    "item_uranium_chunk_s",
+    "item_whoopie",
+    "item_zipline_gun"
+  ];
 
-  function addEditor() {
-    const editorsDiv = document.getElementById('editors');
-    const newEditor = createEditor(false);
-    editorsDiv.appendChild(newEditor);
-  }
-
-  function addChild(button) {
-    const container = button.parentElement.querySelector('.children-container');
-    const childEditor = createEditor(true);
-    container.appendChild(childEditor);
-  }
-
-  function removeEditor(button) {
-    button.parentElement.remove();
-  }
-
-  function gatherData(container) {
-    // Read input values
-    const hue = parseFloat(container.querySelector('.hue').value) || 0;
-    const saturation = parseFloat(container.querySelector('.saturation').value) || 0;
-    const state = parseInt(container.querySelector('.state').value) || 0;
-    const ammo = parseInt(container.querySelector('.ammo').value) || 0;
-    const scale = parseFloat(container.querySelector('.scale').value) || 0;
-
-    // Get children data recursively
-    const childrenContainers = container.querySelector('.children-container').children;
-    const children = [];
-    for (let child of childrenContainers) {
-      children.push(gatherData(child));
+  const select = document.getElementById('itemSelect');
+  itemIDs.forEach(item => {
+    if (item !== "None") {
+      const option = document.createElement('option');
+      option.value = item;
+      option.textContent = item;
+      select.appendChild(option);
     }
-
-    const obj = {};
-    if(hue !== 0) obj.colorHue = hue;
-    if(saturation !== 0) obj.colorSaturation = saturation;
-    if(state !== 0) obj.state = state;
-    if(ammo !== 0) obj.ammo = ammo;
-    if(scale !== 0) obj.scaleModifier = scale;
-    if(children.length > 0) obj.children = children;
-
-    return obj;
-  }
+  });
 
   function generateJSON() {
-    const editors = document.getElementById('editors').children;
-    const results = [];
-    for (let editor of editors) {
-      results.push(gatherData(editor));
-    }
-    document.getElementById('output').value = JSON.stringify(results, null, 2);
+    const selectedItem = select.value;
+
+    const data = {
+      "objects": [
+        {
+          "collection": "user_inventory",
+          "key": "stash",
+          "permission_read": 1,
+          "permission_write": 1,
+          "value": JSON.stringify({
+            version: 1,
+            items: [
+              {
+                itemID: "item_backpack",
+                colorHue: 0,
+                colorSaturation: 0,
+                scaleModifier: 0,
+                children: [
+                  {
+                    itemID: "item_backpack_large_base",
+                    colorHue: 161,
+                    colorSaturation: 120,
+                    scaleModifier: 0,
+                    children: [
+                      { itemID: selectedItem, colorHue: 161, colorSaturation: 120, scaleModifier: 0 },
+                      { itemID: selectedItem, colorHue: 161, colorSaturation: 120, scaleModifier: 0 },
+                      { itemID: selectedItem, colorHue: 161, colorSaturation: 120, scaleModifier: 0 }
+                    ]
+                  }
+                ]
+              }
+            ]
+          })
+        }
+      ]
+    };
+
+    document.getElementById('jsonOutput').textContent = JSON.stringify(data, null, 2);
   }
-
-  // Start with one editor
-  addEditor();
 </script>
-
-</body>
-</html>
