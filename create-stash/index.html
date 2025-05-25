@@ -1,14 +1,3 @@
-<!DOCTYPE html>
-<html>
-  <head>
-<meta name="google-adsense-account" content="ca-pub-6213603518465024">
-<!-- Place this inside the <head> tag -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6213603518465024"
-     crossorigin="anonymous"></script>
-<head>
-<link rel="icon" href="https://cdn.glitch.global/d52a6415-826b-4b02-82db-e300df7a8506/Logo?v=1747925805307" type="image/png" />
-
-    <title>Animal Company Item Maker</title>
 <style>
   body {
     font-family: Arial, sans-serif;
@@ -18,14 +7,12 @@
     max-width: 600px;
     margin: auto;
   }
-
   label {
     font-weight: bold;
     display: block;
     margin-bottom: 8px;
     font-size: 16px;
   }
-
   select {
     width: 100%;
     padding: 8px;
@@ -36,7 +23,6 @@
     color: #eee;
     margin-bottom: 15px;
   }
-
   button {
     background-color: #5a9;
     color: white;
@@ -49,11 +35,30 @@
     width: 100%;
     margin-bottom: 20px;
   }
-
   button:hover {
     background-color: #48a868;
   }
-
+  .child-item {
+    margin-bottom: 10px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .child-item select {
+    flex-grow: 1;
+  }
+  .remove-child-btn {
+    background-color: #d55;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    color: white;
+  }
+  .remove-child-btn:hover {
+    background-color: #b33;
+  }
   pre {
     background-color: #111;
     border: 1px solid #555;
@@ -65,8 +70,12 @@
   }
 </style>
 
-<label for="itemSelect">Choose an item to add inside backpack:</label>
-<select id="itemSelect"></select>
+<label for="mainItemSelect">Choose main item:</label>
+<select id="mainItemSelect"></select>
+
+<h3>Children Items:</h3>
+<div id="childrenContainer"></div>
+<button id="addChildBtn" style="width: auto; margin-bottom: 30px;">+ Add Child Item</button>
 
 <button onclick="generateJSON()">Generate JSON</button>
 
@@ -229,19 +238,71 @@
     "item_zipline_gun"
   ];
 
-  const select = document.getElementById('itemSelect');
+  // Helper function to create a select with all itemIDs except "None"
+  function createItemSelect() {
+    const select = document.createElement('select');
+    itemIDs.forEach(item => {
+      if(item !== "None"){
+        const option = document.createElement('option');
+        option.value = item;
+        option.textContent = item;
+        select.appendChild(option);
+      }
+    });
+    return select;
+  }
+
+  // Setup main item select dropdown
+  const mainItemSelect = document.getElementById('mainItemSelect');
   itemIDs.forEach(item => {
-    if (item !== "None") {
+    if(item !== "None"){
       const option = document.createElement('option');
       option.value = item;
       option.textContent = item;
-      select.appendChild(option);
+      mainItemSelect.appendChild(option);
     }
   });
 
-  function generateJSON() {
-    const selectedItem = select.value;
+  const childrenContainer = document.getElementById('childrenContainer');
+  const addChildBtn = document.getElementById('addChildBtn');
 
+  addChildBtn.addEventListener('click', () => {
+    const div = document.createElement('div');
+    div.classList.add('child-item');
+
+    const childSelect = createItemSelect();
+
+    const removeBtn = document.createElement('button');
+    removeBtn.textContent = 'Remove';
+    removeBtn.classList.add('remove-child-btn');
+    removeBtn.type = "button";
+
+    removeBtn.addEventListener('click', () => {
+      childrenContainer.removeChild(div);
+    });
+
+    div.appendChild(childSelect);
+    div.appendChild(removeBtn);
+
+    childrenContainer.appendChild(div);
+  });
+
+  function generateJSON() {
+    const mainItemID = mainItemSelect.value;
+
+    // Gather all child items from childrenContainer
+    const children = [];
+    childrenContainer.querySelectorAll('select').forEach(select => {
+      children.push({
+        itemID: select.value,
+        colorHue: 0,
+        colorSaturation: 0,
+        scaleModifier: 0,
+        children: []  // no grandchildren for now
+      });
+    });
+
+    // Create data object with 0 children by default, or children if added
     const data = {
       "objects": [
         {
@@ -253,23 +314,11 @@
             version: 1,
             items: [
               {
-                itemID: "item_backpack",
+                itemID: mainItemID,
                 colorHue: 0,
                 colorSaturation: 0,
                 scaleModifier: 0,
-                children: [
-                  {
-                    itemID: "item_backpack_large_base",
-                    colorHue: 161,
-                    colorSaturation: 120,
-                    scaleModifier: 0,
-                    children: [
-                      { itemID: selectedItem, colorHue: 161, colorSaturation: 120, scaleModifier: 0 },
-                      { itemID: selectedItem, colorHue: 161, colorSaturation: 120, scaleModifier: 0 },
-                      { itemID: selectedItem, colorHue: 161, colorSaturation: 120, scaleModifier: 0 }
-                    ]
-                  }
-                ]
+                children: children
               }
             ]
           })
@@ -279,4 +328,5 @@
 
     document.getElementById('jsonOutput').textContent = JSON.stringify(data, null, 2);
   }
+
 </script>
