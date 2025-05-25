@@ -4,7 +4,7 @@
     background-color: #222;
     color: #eee;
     padding: 20px;
-    max-width: 600px;
+    max-width: 700px;
     margin: auto;
   }
   label {
@@ -21,22 +21,38 @@
     border: 1px solid #444;
     background-color: #333;
     color: #eee;
-    margin-bottom: 15px;
   }
   button {
     background-color: #5a9;
     color: white;
     border: none;
-    padding: 12px 20px;
+    padding: 10px 18px;
     font-size: 16px;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    width: 100%;
-    margin-bottom: 20px;
   }
   button:hover {
     background-color: #48a868;
+  }
+  .remove-btn {
+    background-color: #d55;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    color: white;
+  }
+  .remove-btn:hover {
+    background-color: #b33;
+  }
+  .main-item-box {
+    border: 2px solid #4a9;
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    background-color: #2a2a2a;
   }
   .child-item {
     margin-bottom: 10px;
@@ -47,17 +63,8 @@
   .child-item select {
     flex-grow: 1;
   }
-  .remove-child-btn {
-    background-color: #d55;
-    padding: 5px 10px;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
-    border: none;
-    color: white;
-  }
-  .remove-child-btn:hover {
-    background-color: #b33;
+  #addMainItemBtn {
+    margin-bottom: 25px;
   }
   pre {
     background-color: #111;
@@ -70,14 +77,12 @@
   }
 </style>
 
-<label for="mainItemSelect">Choose main item:</label>
-<select id="mainItemSelect"></select>
+<h2>Inventory Builder</h2>
 
-<h3>Children Items:</h3>
-<div id="childrenContainer"></div>
-<button id="addChildBtn" style="width: auto; margin-bottom: 30px;">+ Add Child Item</button>
+<div id="mainItemsContainer"></div>
+<button id="addMainItemBtn">+ Add Main Item (max 5)</button>
 
-<button onclick="generateJSON()">Generate JSON</button>
+<button style="width: 100%; margin-top: 15px;" onclick="generateJSON()">Generate JSON</button>
 
 <h3>Generated JSON:</h3>
 <pre id="jsonOutput"></pre>
@@ -238,7 +243,10 @@
     "item_zipline_gun"
   ];
 
-  // Helper function to create a select with all itemIDs except "None"
+  const mainItemsContainer = document.getElementById('mainItemsContainer');
+  const addMainItemBtn = document.getElementById('addMainItemBtn');
+
+  // Create a select filled with itemIDs (excluding "None")
   function createItemSelect() {
     const select = document.createElement('select');
     itemIDs.forEach(item => {
@@ -252,75 +260,124 @@
     return select;
   }
 
-  // Setup main item select dropdown
-  const mainItemSelect = document.getElementById('mainItemSelect');
-  itemIDs.forEach(item => {
-    if(item !== "None"){
-      const option = document.createElement('option');
-      option.value = item;
-      option.textContent = item;
-      mainItemSelect.appendChild(option);
-    }
-  });
+  // Create a main item box with UI to pick main item and children
+  function createMainItemBox() {
+    const box = document.createElement('div');
+    box.className = 'main-item-box';
 
-  const childrenContainer = document.getElementById('childrenContainer');
-  const addChildBtn = document.getElementById('addChildBtn');
+    // Main item label + remove main item button
+    const mainLabel = document.createElement('label');
+    mainLabel.textContent = 'Choose Main Item:';
 
-  addChildBtn.addEventListener('click', () => {
-    const div = document.createElement('div');
-    div.classList.add('child-item');
+    const mainSelect = createItemSelect();
 
-    const childSelect = createItemSelect();
+    const removeMainBtn = document.createElement('button');
+    removeMainBtn.textContent = 'Remove Main Item';
+    removeMainBtn.className = 'remove-btn';
+    removeMainBtn.type = "button";
 
-    const removeBtn = document.createElement('button');
-    removeBtn.textContent = 'Remove';
-    removeBtn.classList.add('remove-child-btn');
-    removeBtn.type = "button";
-
-    removeBtn.addEventListener('click', () => {
-      childrenContainer.removeChild(div);
+    removeMainBtn.addEventListener('click', () => {
+      mainItemsContainer.removeChild(box);
+      updateAddMainItemBtn();
     });
 
-    div.appendChild(childSelect);
-    div.appendChild(removeBtn);
+    // Children container + add child button
+    const childrenTitle = document.createElement('h4');
+    childrenTitle.textContent = 'Children Items:';
 
-    childrenContainer.appendChild(div);
+    const childrenContainer = document.createElement('div');
+
+    const addChildBtn = document.createElement('button');
+    addChildBtn.textContent = '+ Add Child Item';
+    addChildBtn.type = "button";
+    addChildBtn.style.marginBottom = '20px';
+
+    addChildBtn.addEventListener('click', () => {
+      const childDiv = document.createElement('div');
+      childDiv.className = 'child-item';
+
+      const childSelect = createItemSelect();
+
+      const removeChildBtn = document.createElement('button');
+      removeChildBtn.textContent = 'Remove';
+      removeChildBtn.className = 'remove-btn';
+      removeChildBtn.type = "button";
+
+      removeChildBtn.addEventListener('click', () => {
+        childrenContainer.removeChild(childDiv);
+      });
+
+      childDiv.appendChild(childSelect);
+      childDiv.appendChild(removeChildBtn);
+      childrenContainer.appendChild(childDiv);
+    });
+
+    // Append everything
+    box.appendChild(mainLabel);
+    box.appendChild(mainSelect);
+    box.appendChild(removeMainBtn);
+    box.appendChild(childrenTitle);
+    box.appendChild(childrenContainer);
+    box.appendChild(addChildBtn);
+
+    return { box, mainSelect, childrenContainer };
+  }
+
+  function updateAddMainItemBtn() {
+    addMainItemBtn.disabled = mainItemsContainer.children.length >= 5;
+  }
+
+  addMainItemBtn.addEventListener('click', () => {
+    if (mainItemsContainer.children.length >= 5) return;
+
+    const { box } = createMainItemBox();
+    mainItemsContainer.appendChild(box);
+    updateAddMainItemBtn();
   });
 
-  function generateJSON() {
-    const mainItemID = mainItemSelect.value;
+  // Start with 1 main item box
+  addMainItemBtn.click();
 
-    // Gather all child items from childrenContainer
-    const children = [];
-    childrenContainer.querySelectorAll('select').forEach(select => {
-      children.push({
-        itemID: select.value,
+  function generateJSON() {
+    const objects = [];
+
+    Array.from(mainItemsContainer.children).forEach(box => {
+      const mainSelect = box.querySelector('select');
+      const mainItemID = mainSelect.value;
+
+      const childrenContainer = box.querySelector('div');
+      const children = [];
+
+      // The childrenContainer is the div with all child-item divs
+      childrenContainer.querySelectorAll('.child-item select').forEach(childSelect => {
+        children.push({
+          itemID: childSelect.value,
+          colorHue: 0,
+          colorSaturation: 0,
+          scaleModifier: 0,
+          children: []
+        });
+      });
+
+      objects.push({
+        itemID: mainItemID,
         colorHue: 0,
         colorSaturation: 0,
         scaleModifier: 0,
-        children: []  // no grandchildren for now
+        children: children
       });
     });
 
-    // Create data object with 0 children by default, or children if added
     const data = {
-      "objects": [
+      objects: [
         {
-          "collection": "user_inventory",
-          "key": "stash",
-          "permission_read": 1,
-          "permission_write": 1,
-          "value": JSON.stringify({
+          collection: "user_inventory",
+          key: "stash",
+          permission_read: 1,
+          permission_write: 1,
+          value: JSON.stringify({
             version: 1,
-            items: [
-              {
-                itemID: mainItemID,
-                colorHue: 0,
-                colorSaturation: 0,
-                scaleModifier: 0,
-                children: children
-              }
-            ]
+            items: objects
           })
         }
       ]
@@ -328,5 +385,4 @@
 
     document.getElementById('jsonOutput').textContent = JSON.stringify(data, null, 2);
   }
-
 </script>
