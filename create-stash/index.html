@@ -168,443 +168,431 @@
         border-color: #e9d7c1;
       }
     </style>
+  </head>
+  <body>
+    <h2>Inventory Builder</h2>
 
-<h2>Inventory Builder</h2>
+    <div id="mainItemsContainer"></div>
+    <button id="addMainItemBtn">+ Add Main Item (max 5)</button>
 
-<div id="mainItemsContainer"></div>
-<button id="addMainItemBtn">+ Add Main Item (max 5)</button>
+    <button style="width: 100%; margin-top: 15px;" onclick="generateJSON()">Generate JSON</button>
 
-<button style="width: 100%; margin-top: 15px;" onclick="generateJSON()">Generate JSON</button>
+    <h3>Generated JSON:</h3>
+    <pre id="jsonOutput"></pre>
 
-<h3>Generated JSON:</h3>
-<pre id="jsonOutput"></pre>
+    <script>
+      const itemIDs = [
+        "None",
+        "item_anti_gravity_grenade",
+        "item_apple",
+        "item_arrow",
+        "item_arrow_heart",
+        "item_arrow_lightbulb",
+        "item_backpack",
+        "item_backpack_black",
+        "item_backpack_green",
+        "item_backpack_large_base",
+        "item_backpack_large_basketball",
+        "item_backpack_large_clover",
+        "item_backpack_pink",
+        "item_backpack_small_base",
+        "item_backpack_white",
+        "item_backpack_with_flashlight",
+        "item_balloon",
+        "item_balloon_heart",
+        "item_banana",
+        "item_baseball_bat",
+        "item_big_cup",
+        "item_boombox",
+        "item_boombox_neon",
+        "item_box_fan",
+        "item_calculator",
+        "item_cardboard_box",
+        "item_cash",
+        "item_cash_mega_pile",
+        "item_cash_pile",
+        "item_clapper",
+        "item_cluster_grenade",
+        "item_cola",
+        "item_cola_large",
+        "item_company_ration",
+        "item_company_ration_heal",
+        "item_cracker",
+        "item_crate",
+        "item_crossbow",
+        "item_crossbow_heart",
+        "item_crowbar",
+        "item_disc",
+        "item_disposable_camera",
+        "item_dynamite",
+        "item_dynamite_cube",
+        "item_egg",
+        "item_flaregun",
+        "item_flashbang",
+        "item_flashlight",
+        "item_flashlight_mega",
+        "item_flashlight_red",
+        "item_floppy3",
+        "item_floppy5",
+        "item_football",
+        "item_frying_pan",
+        "item_glowstick",
+        "item_goldbar",
+        "item_grenade",
+        "item_heart_chunk",
+        "item_heart_gun",
+        "item_heartchocolatebox",
+        "item_hh_key",
+        "item_hookshot",
+        "item_hoverpad",
+        "item_impulse_grenade",
+        "item_jetpack",
+        "item_keycard",
+        "item_lance",
+        "item_large_banana",
+        "item_laptop",
+        "item_laptop_dog",
+        "item_laptop_nyan",
+        "item_laptop_rust",
+        "item_laptop_silent",
+        "item_laptop_valkyrie",
+        "item_laptop_vaporwave",
+        "item_magic_boomerang",
+        "item_meat",
+        "item_medkit",
+        "item_mini_banana",
+        "item_mini_fish",
+        "item_mini_knife",
+        "item_mini_meat",
+        "item_mini_pizza",
+        "item_mini_sword",
+        "item_mini_tank",
+        "item_molotov",
+        "item_money",
+        "item_money_bag",
+        "item_money_bag_larger",
+        "item_money_bag_pile",
+        "item_money_bag_tiny",
+        "item_money_bag_tiny_stack",
+        "item_money_bag_tiny_stack_large",
+        "item_money_bag_tiny_stack_tiny",
+        "item_money_bag_tiny_tiny",
+        "item_money_coin",
+        "item_money_pile",
+        "item_money_stack",
+        "item_money_tiny",
+        "item_money_tiny_stack",
+        "item_money_tiny_stack_large",
+        "item_money_tiny_stack_tiny",
+        "item_money_tiny_tiny",
+        "item_pizza",
+        "item_plasma_rifle",
+        "item_poison_grenade",
+        "item_potion",
+        "item_radar",
+        "item_rifle",
+        "item_rifle_heart",
+        "item_rifle_laser",
+        "item_rifle_suppressor",
+        "item_rifle_tactical",
+        "item_rocket_launcher",
+        "item_rocket_launcher_splash",
+        "item_rocket_launcher_tactical",
+        "item_rust_bucket",
+        "item_rust_bucket_black",
+        "item_rust_bucket_blue",
+        "item_rust_bucket_red",
+        "item_rust_bucket_yellow",
+        "item_rust_bucket_yellow_helmet",
+        "item_rust_forklift",
+        "item_rust_knife",
+        "item_rust_machete",
+        "item_rust_pot",
+        "item_rust_revolver",
+        "item_rust_rifle",
+        "item_rust_rifle_iron_sight",
+        "item_rust_rifle_scope",
+        "item_rust_shovel",
+        "item_rust_shovel_long",
+        "item_rust_sledgehammer",
+        "item_rust_sledgehammer_sparks",
+        "item_rust_spiked_bat",
+        "item_rust_spear",
+        "item_rust_wood_pile",
+        "item_rust_wooden_board",
+        "item_screwdriver",
+        "item_shuriken",
+        "item_sledgehammer",
+        "item_smoke_grenade",
+        "item_soda",
+        "item_soda_cola",
+        "item_soda_rocket",
+        "item_soda_sprite",
+        "item_soda_tonic",
+        "item_soda_water",
+        "item_soda_water_bottle",
+        "item_spiky_ball",
+        "item_spiky_ball_big",
+        "item_spiky_ball_small",
+        "item_tennis_ball",
+        "item_torch",
+        "item_toy_rifle",
+        "item_toy_rifle_heart",
+        "item_toy_sword",
+        "item_trap",
+        "item_turkey_leg",
+        "item_vodka",
+        "item_vodka_bottle",
+        "item_water_bottle",
+        "item_water_gun",
+        "item_wooden_box",
+        "item_wooden_box_locked",
+        "item_wooden_crate",
+        "item_wooden_log",
+        "item_wooden_plank",
+        "item_wooden_stick",
+        "item_wooden_stick_broken",
+        "item_wooden_stick_long",
+        "item_wooden_stick_short",
+        "item_wooden_sword",
+        "item_yoyo",
+      ];
 
-<script>
-  const itemIDs = [
-    "None",
-    "item_anti_gravity_grenade",
-    "item_apple",
-    "item_arrow",
-    "item_arrow_heart",
-    "item_arrow_lightbulb",
-    "item_backpack",
-    "item_backpack_black",
-    "item_backpack_green",
-    "item_backpack_large_base",
-    "item_backpack_large_basketball",
-    "item_backpack_large_clover",
-    "item_backpack_pink",
-    "item_backpack_small_base",
-    "item_backpack_white",
-    "item_backpack_with_flashlight",
-    "item_balloon",
-    "item_balloon_heart",
-    "item_banana",
-    "item_baseball_bat",
-    "item_big_cup",
-    "item_boombox",
-    "item_boombox_neon",
-    "item_box_fan",
-    "item_calculator",
-    "item_cardboard_box",
-    "item_cash",
-    "item_cash_mega_pile",
-    "item_cash_pile",
-    "item_clapper",
-    "item_cluster_grenade",
-    "item_cola",
-    "item_cola_large",
-    "item_company_ration",
-    "item_company_ration_heal",
-    "item_cracker",
-    "item_crate",
-    "item_crossbow",
-    "item_crossbow_heart",
-    "item_crowbar",
-    "item_disc",
-    "item_disposable_camera",
-    "item_dynamite",
-    "item_dynamite_cube",
-    "item_egg",
-    "item_flaregun",
-    "item_flashbang",
-    "item_flashlight",
-    "item_flashlight_mega",
-    "item_flashlight_red",
-    "item_floppy3",
-    "item_floppy5",
-    "item_football",
-    "item_frying_pan",
-    "item_glowstick",
-    "item_goldbar",
-    "item_grenade",
-    "item_heart_chunk",
-    "item_heart_gun",
-    "item_heartchocolatebox",
-    "item_hh_key",
-    "item_hookshot",
-    "item_hoverpad",
-    "item_impulse_grenade",
-    "item_jetpack",
-    "item_keycard",
-    "item_lance",
-    "item_large_banana",
-    "item_mug",
-    "item_nut",
-    "item_ogre_hands",
-    "item_ore_copper_l",
-    "item_ore_copper_m",
-    "item_ore_copper_s",
-    "item_ore_gold_l",
-    "item_ore_gold_m",
-    "item_ore_gold_s",
-    "item_ore_hell",
-    "item_ore_silver_l",
-    "item_ore_silver_m",
-    "item_ore_silver_s",
-    "item_painting_canvas",
-    "item_paperpack",
-    "item_pelican_case",
-    "item_pickaxe",
-    "item_pickaxe_cny",
-    "item_pickaxe_cube",
-    "item_pipe",
-    "item_pinata_bat",
-    "item_plunger",
-    "item_pogostick",
-    "item_police_baton",
-    "item_pumpkin_pie",
-    "item_pumpkinjack",
-    "item_pumpkinjack_small",
-    "item_quiver",
-    "item_quiver_heart",
-    "item_radioactive_broccoli",
-    "item_randombox_mobloot_big",
-    "item_randombox_mobloot_medium",
-    "item_randombox_mobloot_small",
-    "item_randombox_mobloot_weapons",
-    "item_revolver",
-    "item_revolver_ammo",
-    "item_revolver_gold",
-    "item_rope",
-    "item_rpg",
-    "item_rpg_ammo",
-    "item_rpg_ammo_egg",
-    "item_rpg_cny",
-    "item_rpg_easter",
-    "item_rubberducky",
-    "item_ruby",
-    "item_saddle",
-    "item_scanner",
-    "item_scissors",
-    "item_shield",
-    "item_shield_bones",
-    "item_shield_police",
-    "item_shotgun",
-    "item_shotgun_ammo",
-    "item_shredder",
-    "item_shrinking_broccoli",
-    "item_snowball",
-    "item_stapler",
-    "item_stick_armbones",
-    "item_stick_bone",
-    "item_sticker_dispenser",
-    "item_sticky_dynamite",
-    "item_stinky_cheese",
-    "item_tablet",
-    "item_tapedispenser",
-    "item_tele_grenade",
-    "item_theremin",
-    "item_timebomb",
-    "item_toilet_paper",
-    "item_toilet_paper_mega",
-    "item_toilet_paper_roll_empty",
-    "item_treestick",
-    "item_tripwire_explosive",
-    "item_trophy",
-    "item_turkey_leg",
-    "item_turkey_whole",
-    "item_umbrella",
-    "item_umbrella_clover",
-    "item_unidentified",
-    "item_upsidedown_loot",
-    "item_uranium_chunk_l",
-    "item_uranium_chunk_m",
-    "item_uranium_chunk_s",
-    "item_whoopie",
-    "item_zipline_gun"
-  ];
-
-  const mainItemsContainer = document.getElementById('mainItemsContainer');
-  const addMainItemBtn = document.getElementById('addMainItemBtn');
-
-  function createItemSelect() {
-    const select = document.createElement('select');
-    itemIDs.forEach(item => {
-      if(item !== "None"){
-        const option = document.createElement('option');
-        option.value = item;
-        option.textContent = item;
-        select.appendChild(option);
+      // Helper to create select dropdown for items
+      function createItemSelect(selectedValue = "None") {
+        const select = document.createElement("select");
+        for (const itemId of itemIDs) {
+          const option = document.createElement("option");
+          option.value = itemId;
+          option.textContent = itemId;
+          select.appendChild(option);
+        }
+        select.value = selectedValue;
+        return select;
       }
-    });
-    return select;
-  }
 
-  // Creates a small labeled number input
-  function createNumberInput(labelText, defaultValue = 0, min = 0, max = 360) {
-    const container = document.createElement('div');
-    container.className = 'item-properties';
+      const mainItemsContainer = document.getElementById("mainItemsContainer");
+      const addMainItemBtn = document.getElementById("addMainItemBtn");
 
-    const label = document.createElement('label');
-    label.textContent = labelText;
+      // Keep track of main item boxes count (max 5)
+      let mainItemCount = 0;
 
-    const input = document.createElement('input');
-    input.type = 'number';
-    input.value = defaultValue;
-    input.min = min;
-    input.max = max;
+      function createMainItemBox() {
+        if (mainItemCount >= 5) {
+          alert("Maximum 5 main items allowed.");
+          return;
+        }
+        mainItemCount++;
 
-    container.appendChild(label);
-    container.appendChild(input);
+        const box = document.createElement("div");
+        box.classList.add("slot-container", "main-item-box");
 
-    return { container, input };
-  }
+        const mainSelectLabel = document.createElement("label");
+        mainSelectLabel.textContent = "Main Item:";
+        box.appendChild(mainSelectLabel);
 
-  function createMainItemBox() {
-    const box = document.createElement('div');
-    box.className = 'main-item-box';
+        const mainSelect = createItemSelect();
+        box.appendChild(mainSelect);
 
-    // Main item select + remove main item button
-    const mainLabel = document.createElement('label');
-    mainLabel.textContent = 'Choose Main Item:';
-    const mainSelect = createItemSelect();
+        // Color Hue Input
+        const hueLabel = document.createElement("label");
+        hueLabel.textContent = "Color Hue (0-360):";
+        box.appendChild(hueLabel);
+        const hueInput = document.createElement("input");
+        hueInput.type = "number";
+        hueInput.min = 0;
+        hueInput.max = 360;
+        hueInput.value = 0;
+        box.appendChild(hueInput);
 
-    const removeMainBtn = document.createElement('button');
-    removeMainBtn.textContent = 'Remove Main Item';
-    removeMainBtn.className = 'remove-btn';
-    removeMainBtn.type = "button";
+        // Color Saturation Input
+        const saturationLabel = document.createElement("label");
+        saturationLabel.textContent = "Color Saturation (0-100):";
+        box.appendChild(saturationLabel);
+        const saturationInput = document.createElement("input");
+        saturationInput.type = "number";
+        saturationInput.min = 0;
+        saturationInput.max = 100;
+        saturationInput.value = 0;
+        box.appendChild(saturationInput);
 
-    removeMainBtn.addEventListener('click', () => {
-      mainItemsContainer.removeChild(box);
-      updateAddMainItemBtn();
-    });
+        // Scale Modifier Input
+        const scaleLabel = document.createElement("label");
+        scaleLabel.textContent = "Scale Modifier (decimal):";
+        box.appendChild(scaleLabel);
+        const scaleInput = document.createElement("input");
+        scaleInput.type = "number";
+        scaleInput.step = "0.01";
+        scaleInput.value = 0;
+        box.appendChild(scaleInput);
 
-    // Properties inputs for main item
-    const mainProps = document.createElement('div');
-    mainProps.className = 'item-properties-container';
+        // Ammo Input
+        const ammoLabel = document.createElement("label");
+        ammoLabel.textContent = "Ammo (integer):";
+        box.appendChild(ammoLabel);
+        const ammoInput = document.createElement("input");
+        ammoInput.type = "number";
+        ammoInput.min = 0;
+        ammoInput.value = 0;
+        box.appendChild(ammoInput);
 
-    const hueInput = createNumberInput('colorHue', 0, 0, 360);
-    const saturationInput = createNumberInput('colorSaturation', 0, 0, 100);
-    const scaleInput = createNumberInput('scaleModifier', 0, -10, 10);
-    const ammoInput = createNumberInput('ammo', 0, 0, 999999);
+        // Container for children items
+        const childrenContainer = document.createElement("div");
+        childrenContainer.classList.add("child-block");
+        box.appendChild(childrenContainer);
 
-    mainProps.appendChild(hueInput.container);
-    mainProps.appendChild(saturationInput.container);
-    mainProps.appendChild(scaleInput.container);
-    mainProps.appendChild(ammoInput.container);
+        // Add Child Button
+        const addChildBtn = document.createElement("button");
+        addChildBtn.textContent = "+ Add Child Item";
+        box.appendChild(addChildBtn);
 
-    // Children container + add child button
-    const childrenTitle = document.createElement('h4');
-    childrenTitle.textContent = 'Children Items:';
-
-    const childrenContainer = document.createElement('div');
-
-    const addChildBtn = document.createElement('button');
-    addChildBtn.textContent = '+ Add Child Item';
-    addChildBtn.type = "button";
-    addChildBtn.style.marginBottom = '20px';
-
-    addChildBtn.addEventListener('click', () => {
-      const childDiv = document.createElement('div');
-      childDiv.className = 'child-item';
-
-      const childSelect = createItemSelect();
-
-      // Child properties inputs
-      const childHueInput = createNumberInput('colorHue', 0, 0, 360);
-      const childSaturationInput = createNumberInput('colorSaturation', 0, 0, 100);
-      const childScaleInput = createNumberInput('scaleModifier', 0, -10, 10);
-      const childAmmoInput = createNumberInput('ammo', 0, 0, 999999);
-
-      // Remove child button
-      const removeChildBtn = document.createElement('button');
-      removeChildBtn.textContent = 'Remove Child Item';
-      removeChildBtn.className = 'remove-btn';
-      removeChildBtn.type = "button";
-
-      removeChildBtn.addEventListener('click', () => {
-        childrenContainer.removeChild(childDiv);
-      });
-
-      childDiv.appendChild(childSelect);
-      childDiv.appendChild(childHueInput.container);
-      childDiv.appendChild(childSaturationInput.container);
-      childDiv.appendChild(childScaleInput.container);
-      childDiv.appendChild(childAmmoInput.container);
-      childDiv.appendChild(removeChildBtn);
-
-      childrenContainer.appendChild(childDiv);
-    });
-
-    box.appendChild(mainLabel);
-    box.appendChild(mainSelect);
-    box.appendChild(mainProps);
-    box.appendChild(childrenTitle);
-    box.appendChild(childrenContainer);
-    box.appendChild(addChildBtn);
-    box.appendChild(removeMainBtn);
-
-    return {
-      box,
-      mainSelect,
-      hueInput: hueInput.input,
-      saturationInput: saturationInput.input,
-      scaleInput: scaleInput.input,
-      ammoInput: ammoInput.input,
-      childrenContainer,
-    };
-  }
-
-  function updateAddMainItemBtn() {
-    addMainItemBtn.disabled = mainItemsContainer.children.length >= 5;
-  }
-
-  addMainItemBtn.addEventListener('click', () => {
-    const { box } = createMainItemBox();
-    mainItemsContainer.appendChild(box);
-    updateAddMainItemBtn();
-  });
-
-    // Function to generate JSON output based on current UI data
-  function generateJSON() {
-    const allMainItems = [];
-
-    // Loop through all main item boxes
-    mainItemsContainer.querySelectorAll('.main-item-box').forEach(box => {
-      // Get main item values
-      const mainSelect = box.querySelector('select');
-      const hue = parseInt(box.querySelector('input[type="number"]:nth-of-type(1)').value) || 0;
-      const saturation = parseInt(box.querySelector('input[type="number"]:nth-of-type(2)').value) || 0;
-      const scale = parseInt(box.querySelector('input[type="number"]:nth-of-type(3)').value) || 0;
-      const ammo = parseInt(box.querySelector('input[type="number"]:nth-of-type(4)').value) || 0;
-
-      // Collect children
-      const children = [];
-      box.querySelectorAll('.child-item').forEach(childDiv => {
-        const childSelect = childDiv.querySelector('select');
-        const childHue = parseInt(childDiv.querySelector('input[type="number"]:nth-of-type(1)').value) || 0;
-        const childSaturation = parseInt(childDiv.querySelector('input[type="number"]:nth-of-type(2)').value) || 0;
-        const childScale = parseInt(childDiv.querySelector('input[type="number"]:nth-of-type(3)').value) || 0;
-        const childAmmo = parseInt(childDiv.querySelector('input[type="number"]:nth-of-type(4)').value) || 0;
-
-        children.push({
-          key: childSelect.value,
-          value: JSON.stringify({
-            colorHue: childHue,
-            colorSaturation: childSaturation,
-            scaleModifier: childScale,
-            ammo: childAmmo
-          }),
-          permission: 'private',
-          collection: 'items'
+        addChildBtn.addEventListener("click", () => {
+          if (childrenContainer.childElementCount >= 5) {
+            alert("Max 5 child items per main item.");
+            return;
+          }
+          const childDiv = createChildItemDiv();
+          childrenContainer.appendChild(childDiv);
         });
-      });
 
-      // Push main item object with children as nested items inside value string
-      allMainItems.push({
-        collection: 'items',
-        key: mainSelect.value,
-        permission: 'private',
-        value: JSON.stringify({
-          colorHue: hue,
-          colorSaturation: saturation,
-          scaleModifier: scale,
-          ammo: ammo,
-          items: children
-        })
-      });
-    });
+        // Remove button for main item box
+        const removeMainBtn = document.createElement("button");
+        removeMainBtn.textContent = "Remove Main Item";
+        removeMainBtn.classList.add("remove-btn");
+        box.appendChild(removeMainBtn);
 
-    // Show the JSON in the <pre> tag nicely formatted
-    document.getElementById('jsonOutput').textContent = JSON.stringify(allMainItems, null, 2);
-  }
+        removeMainBtn.addEventListener("click", () => {
+          mainItemsContainer.removeChild(box);
+          mainItemCount--;
+        });
 
- function generateJSON() {
-  // Create an array to hold all main items in the final JSON
-  const objectsArray = [];
+        // Save references to inputs for easy access
+        box.mainSelect = mainSelect;
+        box.hueInput = hueInput;
+        box.saturationInput = saturationInput;
+        box.scaleInput = scaleInput;
+        box.ammoInput = ammoInput;
+        box.childrenContainer = childrenContainer;
 
-  // Loop through all main item boxes
-  const mainBoxes = mainItemsContainer.querySelectorAll('.main-item-box');
-  mainBoxes.forEach(mainBox => {
-    // Get main item data
-    const mainItemKey = mainBox.mainSelect.value;
-    if (mainItemKey === "None") return; // skip if none selected
+        mainItemsContainer.appendChild(box);
+      }
 
-    // Get the properties
-    const colorHue = Number(mainBox.hueInput.value) || 0;
-    const colorSaturation = Number(mainBox.saturationInput.value) || 0;
-    const scaleModifier = Number(mainBox.scaleInput.value) || 0;
-    const ammo = Number(mainBox.ammoInput.value) || 0;
+      function createChildItemDiv() {
+        const div = document.createElement("div");
+        div.classList.add("child-item");
 
-    // Collect children items
-    const children = [];
-    const childDivs = mainBox.childrenContainer.querySelectorAll('.child-item');
-    childDivs.forEach(childDiv => {
-      const childSelect = childDiv.querySelector('select');
-      const childHueInput = childDiv.querySelector('input[type="number"]:nth-of-type(1)');
-      const childSatInput = childDiv.querySelector('input[type="number"]:nth-of-type(2)');
-      const childScaleInput = childDiv.querySelector('input[type="number"]:nth-of-type(3)');
-      const childAmmoInput = childDiv.querySelector('input[type="number"]:nth-of-type(4)');
+        const childSelect = createItemSelect();
+        div.appendChild(childSelect);
 
-      if (!childSelect || childSelect.value === "None") return;
+        // Child Color Hue
+        const hueInput = document.createElement("input");
+        hueInput.type = "number";
+        hueInput.min = 0;
+        hueInput.max = 360;
+        hueInput.value = 0;
+        div.appendChild(hueInput);
 
-      children.push({
-        itemId: childSelect.value,
-        colorHue: Number(childHueInput.value) || 0,
-        colorSaturation: Number(childSatInput.value) || 0,
-        scaleModifier: Number(childScaleInput.value) || 0,
-        ammo: Number(childAmmoInput.value) || 0,
-      });
-    });
+        // Child Color Saturation
+        const satInput = document.createElement("input");
+        satInput.type = "number";
+        satInput.min = 0;
+        satInput.max = 100;
+        satInput.value = 0;
+        div.appendChild(satInput);
 
-    // Build the value string for main item with children as JSON inside
-    const valueObj = {
-      colorHue,
-      colorSaturation,
-      scaleModifier,
-      ammo,
-      children: children.map(c => ({
-        itemId: c.itemId,
-        colorHue: c.colorHue,
-        colorSaturation: c.colorSaturation,
-        scaleModifier: c.scaleModifier,
-        ammo: c.ammo,
-      })),
-    };
+        // Child Scale Modifier
+        const scaleInput = document.createElement("input");
+        scaleInput.type = "number";
+        scaleInput.step = "0.01";
+        scaleInput.value = 0;
+        div.appendChild(scaleInput);
 
-    // Push main item object following your JSON format
-    objectsArray.push({
-      collection: "itemslots",
-      key: mainItemKey,
-      permissions: {
-        read: true,
-        write: true,
-      },
-      value: JSON.stringify(valueObj),
-    });
-  });
+        // Child Ammo
+        const ammoInput = document.createElement("input");
+        ammoInput.type = "number";
+        ammoInput.min = 0;
+        ammoInput.value = 0;
+        div.appendChild(ammoInput);
 
-  // Put the entire array inside a main object (if needed) or just output array
-  const finalJSON = { objects: objectsArray };
+        // Remove button for child
+        const removeChildBtn = document.createElement("button");
+        removeChildBtn.textContent = "Remove Child";
+        removeChildBtn.classList.add("remove-btn");
+        div.appendChild(removeChildBtn);
 
-  // Show the formatted JSON in the pre tag
-  const jsonOutput = document.getElementById('jsonOutput');
-  jsonOutput.textContent = JSON.stringify(finalJSON, null, 2);
-}
+        removeChildBtn.addEventListener("click", () => {
+          div.parentElement.removeChild(div);
+        });
 
+        return div;
+      }
 
+      addMainItemBtn.addEventListener("click", createMainItemBox);
 
-    document.getElementById('jsonOutput').textContent = JSON.stringify(result, null, 2);
-  }
-</script>
+      // JSON generator function
+      function generateJSON() {
+        const objectsArray = [];
+
+        const mainBoxes = mainItemsContainer.querySelectorAll('.main-item-box');
+        mainBoxes.forEach(mainBox => {
+          const mainItemKey = mainBox.mainSelect.value;
+          if (mainItemKey === "None") return;
+
+          const colorHue = Number(mainBox.hueInput.value) || 0;
+          const colorSaturation = Number(mainBox.saturationInput.value) || 0;
+          const scaleModifier = Number(mainBox.scaleInput.value) || 0;
+          const ammo = Number(mainBox.ammoInput.value) || 0;
+
+          const children = [];
+          const childDivs = mainBox.childrenContainer.querySelectorAll('.child-item');
+          childDivs.forEach(childDiv => {
+            const childSelect = childDiv.querySelector('select');
+            const childHueInput = childDiv.querySelector('input[type="number"]:nth-of-type(1)');
+            const childSatInput = childDiv.querySelector('input[type="number"]:nth-of-type(2)');
+            const childScaleInput = childDiv.querySelector('input[type="number"]:nth-of-type(3)');
+            const childAmmoInput = childDiv.querySelector('input[type="number"]:nth-of-type(4)');
+
+            if (!childSelect || childSelect.value === "None") return;
+
+            children.push({
+              itemId: childSelect.value,
+              colorHue: Number(childHueInput.value) || 0,
+              colorSaturation: Number(childSatInput.value) || 0,
+              scaleModifier: Number(childScaleInput.value) || 0,
+              ammo: Number(childAmmoInput.value) || 0,
+            });
+          });
+
+          const valueObj = {
+            colorHue,
+            colorSaturation,
+            scaleModifier,
+            ammo,
+            children: children.map(c => ({
+              itemId: c.itemId,
+              colorHue: c.colorHue,
+              colorSaturation: c.colorSaturation,
+              scaleModifier: c.scaleModifier,
+              ammo: c.ammo,
+            })),
+          };
+
+          objectsArray.push({
+            collection: "itemslots",
+            key: mainItemKey,
+            permissions: {
+              read: true,
+              write: true,
+            },
+            value: JSON.stringify(valueObj),
+          });
+        });
+
+        const finalJSON = { objects: objectsArray };
+
+        const jsonOutput = document.getElementById('jsonOutput');
+        jsonOutput.textContent = JSON.stringify(finalJSON, null, 2);
+      }
+    </script>
+  </body>
+</html>
